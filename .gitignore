@@ -1,0 +1,25 @@
+# --- Secrets: NIEMALS committen ---
+# Echte Zugangsdaten (API-Key, DB-Passwort) leben nur hier, nie im Repo.
+lib/config.php
+config.php
+**/config.php
+!lib/config.example.php
+
+# Lokale Umgebungsdateien
+.env
+.env.*
+
+# PHP / Composer (falls später genutzt)
+/vendor/
+composer.lock
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs / temporäre Dateien
+*.log
