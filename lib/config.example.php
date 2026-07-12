@@ -62,6 +62,22 @@ return [
     // true = statische Beispieldaten, keine API-/DB-Calls (zum Anschauen).
     'demo_mode'          => false,
 
+    // ==================== Self-Updater (tools/update.php) ====================
+    // Spielt neue Releases aus dem GitHub-Repo direkt auf den Server ein.
+    // Aufruf:  https://…/tools/update.php?token=<update_token>&action=check
+    //          https://…/tools/update.php?token=<update_token>&action=apply
+    //
+    // Leeres update_token => Updater ist DEAKTIVIERT (empfohlen, solange nicht gebraucht).
+    'update_token'   => getenv('UPDATE_TOKEN') ?: '',            // langes Geheimnis zum Aufruf
+    'github_repo'    => getenv('GITHUB_REPO') ?: 'leotomhal/scispin',
+    // GitHub-Token mit Lese-Zugriff (Contents) – ZWINGEND für PRIVATE Repos.
+    'github_token'   => getenv('GITHUB_TOKEN') ?: '',
+    // 'release' = neuestes veröffentlichtes Release-Tag, 'branch' = Kopf eines Branches.
+    'update_channel' => getenv('UPDATE_CHANNEL') ?: 'release',
+    'update_branch'  => getenv('UPDATE_BRANCH') ?: 'main',
+    // Diese Pfade werden beim Update NIE überschrieben (relativ zum Projektwurzel).
+    'update_protect' => ['lib/config.php'],
+
     // ==================== Debug ====================
     // true  = echte Fehlermeldungen an den Browser (NUR zum Einrichten).
     // false = neutrale Meldung nach außen (richtig fürs Livesystem).
