@@ -105,6 +105,35 @@ nicht Wahrheit oder Journal-Qualität.
 nacheinander, ein API-Call pro Stufe (Stufe 0 zuerst als Themen-Gate). Ein kleiner
 Call pro Stufe ist robuster auf Shared Hosting als ein großer Call für alles.
 
+## Updates einspielen (Self-Updater)
+
+`tools/update.php` zieht neue Releases (oder einen Branch-Kopf) direkt aus dem
+GitHub-Repo auf den Server – kein FTP nötig. In `lib/config.php` konfigurieren:
+
+- `update_token` – langes Geheimnis; **leer = Updater deaktiviert** (Standard).
+- `github_token` – GitHub-Token mit Lese-Zugriff (Contents); **zwingend für das
+  private Repo**, sonst schlägt der Download fehl.
+- `update_channel` – `release` (neuestes veröffentlichtes Tag) oder `branch`.
+- `update_protect` – Pfade, die nie überschrieben werden (Standard: `lib/config.php`).
+
+Aufruf im Browser:
+
+```
+tools/update.php?token=SECRET&action=check            # nur Versionen vergleichen
+tools/update.php?token=SECRET&action=apply&dry_run=1  # Vorschau: was würde sich ändern
+tools/update.php?token=SECRET&action=apply            # Update wirklich einspielen
+```
+
+Der Versionsvergleich nutzt die `VERSION`-Datei im Projektwurzel. Dateien werden
+nur **überlagert** (kopiert), nie gelöscht; `lib/config.php` und alles unter
+`update_protect` bleibt unangetastet. Zip-Slip-Schutz verhindert Schreibzugriffe
+außerhalb des Projektverzeichnisses.
+
+**Neue Version veröffentlichen:** `VERSION` erhöhen, committen und ein Git-Tag
+`vX.Y.Z` anlegen/pushen. Der `release`-Kanal bevorzugt ein veröffentlichtes
+GitHub-Release, fällt aber automatisch auf das **neueste Tag** zurück – ein
+gepushter Tag genügt also, ein Release muss nicht extra veröffentlicht werden.
+
 ## Modell-String
 
 Die Vorlage nutzt `claude-sonnet-5`. Vor dem Produktivbetrieb gegen die aktuelle
