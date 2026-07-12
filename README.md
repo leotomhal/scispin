@@ -127,8 +127,12 @@ tools/update.php?token=SECRET&action=apply            # Update wirklich einspiel
 Der Versionsvergleich nutzt die `VERSION`-Datei im Projektwurzel. Dateien werden
 nur **überlagert** (kopiert), nie gelöscht; `lib/config.php` und alles unter
 `update_protect` bleibt unangetastet. Zip-Slip-Schutz verhindert Schreibzugriffe
-außerhalb des Projektverzeichnisses. Für ein neues Release ein Git-Tag `vX.Y.Z`
-anlegen und `VERSION` entsprechend erhöhen.
+außerhalb des Projektverzeichnisses.
+
+**Neue Version veröffentlichen:** `VERSION` erhöhen, committen und ein Git-Tag
+`vX.Y.Z` anlegen/pushen. Der `release`-Kanal bevorzugt ein veröffentlichtes
+GitHub-Release, fällt aber automatisch auf das **neueste Tag** zurück – ein
+gepushter Tag genügt also, ein Release muss nicht extra veröffentlicht werden.
 
 ## Modell-String
 

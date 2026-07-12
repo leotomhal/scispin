@@ -103,6 +103,23 @@ function up_download_zipball(string $repo, string $ref, string $token, string $d
     return null;
 }
 
+/** Neuestes Version-Tag (vX.Y.Z) ermitteln – Fallback, wenn kein Release veröffentlicht ist. */
+function up_latest_tag(string $repo, string $token): ?string {
+    $r = up_gh_api('https://api.github.com/repos/' . $repo . '/tags?per_page=100', $token);
+    if ($r['status'] !== 200 || !$r['body']) return null;
+    $tags = json_decode($r['body'], true);
+    if (!is_array($tags)) return null;
+    $best = null;
+    foreach ($tags as $t) {
+        $name = (string)($t['name'] ?? '');
+        if ($name === '') continue;
+        $ver = ltrim($name, 'vV');
+        if (!preg_match('/^\d+(\.\d+)*/', $ver)) continue;      // nur versionsartige Tags
+        if ($best === null || version_compare($ver, ltrim($best, 'vV'), '>')) $best = $name;
+    }
+    return $best;
+}
+
 /** VERSION-Datei eines Refs über die Contents-API lesen (für den 'branch'-Kanal). */
 function up_remote_version(string $repo, string $ref, string $token): ?string {
     $r = up_gh_api('https://api.github.com/repos/' . $repo . '/contents/VERSION?ref=' . rawurlencode($ref), $token);
@@ -220,18 +237,26 @@ function scispin_update_main(): void {
         $remoteVersion = up_remote_version($repo, $branch, $token) ?? '?';
         $refLabel = "Branch '$branch'";
     } else {
+        // Bevorzugt ein veröffentlichtes Release; sonst Fallback auf das neueste Tag.
+        $ref = '';
+        $refLabel = '';
         $r = up_gh_api('https://api.github.com/repos/' . $repo . '/releases/latest', $token);
-        if ($r['status'] !== 200 || !$r['body']) {
+        if ($r['status'] === 200 && $r['body']) {
+            $rel = json_decode($r['body'], true);
+            $ref = (string)($rel['tag_name'] ?? '');
+            if ($ref !== '') $refLabel = "Release '$ref'";
+        }
+        if ($ref === '') {
+            $tag = up_latest_tag($repo, $token);
+            if ($tag !== null) { $ref = $tag; $refLabel = "Tag '$ref'"; }
+        }
+        if ($ref === '') {
             http_response_code(502);
-            echo "Konnte neuestes Release nicht abrufen (HTTP {$r['status']}).\n";
+            echo "Kein veröffentlichtes Release und kein Version-Tag gefunden.\n";
             echo "Privates Repo? Dann github_token mit Contents-Leserecht setzen.\n";
             return;
         }
-        $rel = json_decode($r['body'], true);
-        $ref = (string)($rel['tag_name'] ?? '');
         $remoteVersion = ltrim($ref, 'vV');
-        $refLabel = "Release '$ref'";
-        if ($ref === '') { http_response_code(502); echo "Kein Release-Tag gefunden.\n"; return; }
     }
 
     $updateAvailable = version_compare($remoteVersion, ltrim($localVersion, 'vV'), '>')
