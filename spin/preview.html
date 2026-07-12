@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SciSpin-O-Mat – Vorschau (ohne Server)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tip" id="tip"></div>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Wissenschaftskommunikation · Statische Vorschau</p>
+      <h1>Dieselbe Studie,<br>einmal <span class="turn">durchgedreht</span>.</h1>
+      <p class="lede">Zwischen „zu kompliziert, liest eh keiner" und „was hat das eigentlich noch mit der Arbeit zu tun" liegt gute Wissenschaftskommunikation. Schieb den Regler und sieh, was bei jeder Stufe mit dem Text passiert – und warum.</p>
+      <a class="more-link" href="ueber.html">Worum geht es hier? →</a> &nbsp;·&nbsp;
+      <a class="more-link" href="../">← Start</a>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="slider-wrap" id="slider-wrap">
+      <div class="slider-head">
+        <span class="slider-cap cold">← zu komplex</span>
+        <span class="slider-cap">Verständlichkeits-Regler</span>
+        <span class="slider-cap hot">zu reißerisch →</span>
+      </div>
+      <div class="rail">
+        <div class="rail-track"></div>
+        <div class="rail-goal"></div>
+        <input type="range" id="slider" min="-3" max="3" step="1" value="0" aria-label="Verständlichkeitsstufe">
+      </div>
+      <div class="rail-labels" id="rail-labels">
+        <span data-stufe="-3">−3</span><span data-stufe="-2">−2</span><span data-stufe="-1">−1</span><span data-stufe="0">0</span><span data-stufe="1">+1</span><span data-stufe="2">+2</span><span data-stufe="3">+3</span>
+      </div>
+    </section>
+    <section class="output" id="output"></section>
+  </main>
+  <footer><div class="wrap">SciSpin-O-Mat · statische Vorschau · Demo-Inhalte fest hinterlegt</div></footer>
+
+  <script src="demo_payload.js"></script>
+  <script>
+  const STUFEN={'3':{name:"Was hat das noch mit der Arbeit zu tun?",badge:"hot",btext:"Entgleist"},'2':{name:"Zugespitzt",badge:"hot",btext:"Grenzwertig"},'1':{name:"Griffig gemacht",badge:"good",btext:"Das Ziel"},'0':{name:"Original",badge:"neutral",btext:"Ausgangstext"},'-1':{name:"Solide, aber spröde",badge:"neutral",btext:"Trocken"},'-2':{name:"Fachsprachlich",badge:"cold",btext:"Akademisch"},'-3':{name:"Liest eh keiner",badge:"cold",btext:"Unlesbar"}};
+  const $=s=>document.querySelector(s), slider=$("#slider"), railLabels=$("#rail-labels"), output=$("#output"), tip=$("#tip");
+  slider.addEventListener("input",()=>{markLabel(+slider.value);render(+slider.value);});
+  function markLabel(n){railLabels.querySelectorAll("span").forEach(s=>s.classList.toggle("on",+s.dataset.stufe===n));}
+  function render(n){
+    const d=window.SCISPIN_DEMO[String(n)], meta=STUFEN[String(n)];
+    const dels=(d.aenderungen||[]).filter(a=>a.typ==='gestrichen');
+    output.innerHTML=`<div class="out-head"><span class="out-num">${n>0?'+'+n:n}</span><span class="out-stufe">${esc(meta.name)}</span><span class="badge ${meta.badge}">${esc(meta.btext)}</span><span class="badge neutral">Demo</span></div>
+      <div class="text-card">${mark(d.text,d.aenderungen||[])}</div>
+      ${dels.length?`<div class="text-card del-card"><span class="del-title">Gestrichen gegenüber Original</span>${dels.map(a=>`<p><del class="change" data-tip="${esc(a.erklaerung)}" data-type="${esc(a.fehlertyp||'')}">${esc(a.original)}</del></p>`).join('')}</div>`:''}
+      ${d.kommentar?`<div class="kommentar">${esc(d.kommentar)}</div>`:''}
+      <div class="ref-toggle">Bezug: <button class="btn ghost" disabled>gegen Original</button><button class="btn ghost" disabled>gegen Nachbarstufe</button></div>`;
+    bindTips();
+  }
+  function mark(text,a){let o=esc(text);a.filter(x=>x.typ==='eingefuegt'||x.typ==='veraendert').forEach(x=>{if(!x.neu)return;const n=esc(x.neu);o=o.replace(n,`<mark class="change" data-tip="${esc(x.erklaerung)}" data-type="${esc(x.fehlertyp||'')}">${n}</mark>`);});return o;}
+  function bindTips(){document.querySelectorAll("[data-tip]").forEach(el=>{el.tabIndex=0;el.addEventListener("mouseenter",e=>show(e,el));el.addEventListener("mousemove",pos);el.addEventListener("mouseleave",hide);el.addEventListener("focus",e=>show(e,el));el.addEventListener("blur",hide);});}
+  function show(e,el){tip.innerHTML=(el.dataset.type?`<span class="tip-type">${esc(el.dataset.type)}</span>`:"")+esc(el.dataset.tip);tip.classList.add("show");pos(e);}
+  function pos(e){tip.style.left=Math.min((e.clientX||0)+14,innerWidth-320)+"px";tip.style.top=((e.clientY||0)+14)+"px";}
+  function hide(){tip.classList.remove("show");}
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  markLabel(0); render(0);
+  </script>
+</body>
+</html>

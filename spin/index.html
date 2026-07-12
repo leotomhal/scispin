@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SciSpin-O-Mat – Wie Framing Wissenschaft verzerrt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tip" id="tip"></div>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Wissenschaftskommunikation · Prototyp</p>
+      <h1>Dieselbe Studie,<br>einmal <span class="turn">durchgedreht</span>.</h1>
+      <p class="lede">
+        Zwischen „zu kompliziert, liest eh keiner" und „was hat das eigentlich noch mit der
+        Arbeit zu tun" liegt gute Wissenschaftskommunikation. Schieb den Regler und sieh,
+        was bei jeder Stufe mit dem Text passiert – und warum.
+      </p>
+      <a class="more-link" href="ueber.html">Worum geht es hier? →</a> &nbsp;·&nbsp;
+      <a class="more-link" href="../">← Start</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="input-zone">
+      <div class="controls">
+        <div>
+          <label class="field-label" for="beispiel">Beispiel laden</label>
+          <select id="beispiel"><option value="">— eigenes einfügen —</option></select>
+        </div>
+      </div>
+      <label class="field-label" for="eingabe">Meldung oder Abstract</label>
+      <textarea id="eingabe" placeholder="Forschungsergebnis hier einfügen …"></textarea>
+      <div style="margin-top:14px">
+        <button class="btn" id="start">Skala anwenden</button>
+      </div>
+    </section>
+
+    <section class="slider-wrap" id="slider-wrap" hidden>
+      <div class="slider-head">
+        <span class="slider-cap cold">← zu komplex</span>
+        <span class="slider-cap">Verständlichkeits-Regler</span>
+        <span class="slider-cap hot">zu reißerisch →</span>
+      </div>
+      <div class="rail">
+        <div class="rail-track"></div>
+        <div class="rail-goal"></div>
+        <input type="range" id="slider" min="-3" max="3" step="1" value="0" aria-label="Verständlichkeitsstufe">
+      </div>
+      <div class="rail-labels" id="rail-labels">
+        <span data-stufe="-3">−3</span>
+        <span data-stufe="-2">−2</span>
+        <span data-stufe="-1">−1</span>
+        <span data-stufe="0">0</span>
+        <span data-stufe="1">+1</span>
+        <span data-stufe="2">+2</span>
+        <span data-stufe="3">+3</span>
+      </div>
+    </section>
+
+    <section class="output" id="output">
+      <p class="placeholder">Text einfügen und „Skala anwenden" klicken.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">SciSpin-O-Mat · Prototyp · Demo-Inhalte sind statisch und dienen nur der Veranschaulichung.</div>
+  </footer>
+
+  <script src="beispiele.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
