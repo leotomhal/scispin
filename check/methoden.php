@@ -62,11 +62,12 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Methoden & Evidenz – Studien-Check</title>
 <meta name="description" content="Welche Studientypen es gibt und wie tragfähig ihre Aussagen sind.">
+<link rel="stylesheet" href="../assets/scispin.css">
 <style>
   :root { --fg:#1a1a1a; --muted:#6b6b6b; --line:#e6e6e6; --bg:#f7f7f8; --card:#fff;
-          --gruen:#2e7d32; --gelb:#f9a825; --rot:#c62828; --grau:#9e9e9e; --accent:#1565c0; }
+          --gruen:#2e7d32; --gelb:#f9a825; --rot:#c62828; --grau:#9e9e9e; --accent:#3b5bdb; }
   * { box-sizing:border-box; }
-  body { font-family:system-ui,-apple-system,sans-serif; color:var(--fg); background:var(--bg); margin:0; line-height:1.55; }
+  body { font-family:'Inter',system-ui,-apple-system,sans-serif; color:var(--fg); background:var(--bg); margin:0; line-height:1.55; }
   a { color:var(--accent); }
   header { border-bottom:1px solid var(--line); background:var(--card); }
   .bar { max-width:820px; margin:0 auto; padding:.9rem 1.2rem; display:flex; justify-content:space-between; align-items:center; }
@@ -97,12 +98,6 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
 </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <a class="brand" href="./">&larr; Studien-Check</a>
-    <nav class="nav"><a href="../">Start</a><a href="archive.php">Archiv</a><a href="methoden.php">Methoden</a></nav>
-  </div>
-</header>
 <main>
   <h1>Methoden &amp; Evidenz</h1>
   <p class="lead">Welche Studientypen es gibt – und wie weit ihre Aussagen tragen.</p>
@@ -152,6 +147,7 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
     </div>
   <?php endforeach; ?>
 </main>
-<footer><div class="foot"><a href="./" style="color:var(--muted)">Start</a> · <a href="archive.php" style="color:var(--muted)">Archiv</a></div></footer>
+<script>window.SCISPIN = { root: '../', active: 'methoden' };</script>
+<script src="../assets/chrome.js"></script>
 </body>
 </html>

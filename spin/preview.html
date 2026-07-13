@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SciSpin-O-Mat – Vorschau (ohne Server)</title>
+  <link rel="stylesheet" href="../assets/scispin.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,8 +14,7 @@
       <p class="eyebrow">Wissenschaftskommunikation · Statische Vorschau</p>
       <h1>Dieselbe Studie,<br>einmal <span class="turn">durchgedreht</span>.</h1>
       <p class="lede">Zwischen „zu kompliziert, liest eh keiner" und „was hat das eigentlich noch mit der Arbeit zu tun" liegt gute Wissenschaftskommunikation. Schieb den Regler und sieh, was bei jeder Stufe mit dem Text passiert – und warum.</p>
-      <a class="more-link" href="ueber.html">Worum geht es hier? →</a> &nbsp;·&nbsp;
-      <a class="more-link" href="../">← Start</a>
+      <a class="more-link" href="ueber.html">Worum geht es hier? →</a>
       <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025.</p>
     </div>
   </header>
@@ -36,8 +36,6 @@
     </section>
     <section class="output" id="output"></section>
   </main>
-  <footer><div class="wrap">SciSpin-O-Mat · statische Vorschau · Demo-Inhalte fest hinterlegt</div></footer>
-
   <script src="demo_payload.js"></script>
   <script>
   const STUFEN={'3':{name:"Was hat das noch mit der Arbeit zu tun?",badge:"hot",btext:"Entgleist"},'2':{name:"Zugespitzt",badge:"hot",btext:"Grenzwertig"},'1':{name:"Griffig gemacht",badge:"good",btext:"Das Ziel"},'0':{name:"Original",badge:"neutral",btext:"Ausgangstext"},'-1':{name:"Solide, aber spröde",badge:"neutral",btext:"Trocken"},'-2':{name:"Fachsprachlich",badge:"cold",btext:"Akademisch"},'-3':{name:"Liest eh keiner",badge:"cold",btext:"Unlesbar"}};
@@ -62,5 +60,7 @@
   function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   markLabel(0); render(0);
   </script>
+  <script>window.SCISPIN = { root: '../', active: 'spin' };</script>
+  <script src="../assets/chrome.js"></script>
 </body>
 </html>
