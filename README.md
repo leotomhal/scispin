@@ -115,6 +115,23 @@ nicht Wahrheit oder Journal-Qualität.
 nacheinander, ein API-Call pro Stufe (Stufe 0 zuerst als Themen-Gate). Ein kleiner
 Call pro Stufe ist robuster auf Shared Hosting als ein großer Call für alles.
 
+## Ganze Seite mit Passwort schützen
+
+Am robustesten über **HTTP Basic Auth** auf Server-Ebene – schützt alle Seiten,
+die statischen Spin-Dateien, die API-Endpunkte und den Updater (Apache prüft vor
+PHP). Zwei Wege:
+
+- **goneo-Kundenmenü → „Verzeichnisschutz"** für das Web-Verzeichnis aktivieren.
+  Ein Klick, goneo legt `.htaccess` + `.htpasswd` selbst an. Empfohlen.
+- **Manuell:** `.htaccess.example` nach `.htaccess` kopieren, `AuthUserFile` auf
+  den absoluten Pfad der `.htpasswd` setzen und diese anlegen
+  (`htpasswd -nbB benutzer 'PASSWORT'`). Details stehen in `.htaccess.example`.
+
+`.htaccess` und `.htpasswd` sind **server-spezifisch** (Pfad/Hash) und gehören
+**nicht ins Repo**: Sie sind in `.gitignore` und in `update_protect` – der Updater
+fasst sie also nie an. Die Frontend-`fetch()`-Aufrufe funktionieren weiter, weil
+der Browser nach dem Login die Zugangsdaten automatisch mitsendet.
+
 ## Updates einspielen (Self-Updater)
 
 `tools/update.php` zieht neue Releases (oder einen Branch-Kopf) direkt aus dem
