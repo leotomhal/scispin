@@ -76,8 +76,7 @@ return [
     'update_channel' => getenv('UPDATE_CHANNEL') ?: 'release',
     'update_branch'  => getenv('UPDATE_BRANCH') ?: 'main',
     // Diese Pfade werden beim Update NIE überschrieben (relativ zum Projektwurzel).
-    // .htaccess/.htpasswd = server-spezifischer Passwortschutz, bleibt unangetastet.
-    'update_protect' => ['lib/config.php', '.htaccess', '.htpasswd'],
+    'update_protect' => ['lib/config.php'],
 
     // ==================== Debug ====================
     // true  = echte Fehlermeldungen an den Browser (NUR zum Einrichten).
