@@ -62,7 +62,7 @@ $renderDetail = function(?string $resultJson) use ($esc, $ul): string {
             . '.</strong> ' . $esc($a['methodik_klartext']['erklaerung'] ?? '');
         $k = $a['methodik_klartext']['study_type_key'] ?? '';
         if ($k && $k !== 'andere') {
-            $h .= ' <a href="methoden.php#' . $esc($k) . '" target="_blank" rel="noopener">Was bedeutet das?</a>';
+            $h .= ' <a href="../methoden.php#' . $esc($k) . '" target="_blank" rel="noopener">Was bedeutet das?</a>';
         }
         $h .= '</p>';
         if (!empty($a['methodik_klartext']['fehlende_angaben']))
@@ -125,7 +125,7 @@ $renderDetail = function(?string $resultJson) use ($esc, $ul): string {
 <body>
 <main>
   <h1>Studien-Check – Archiv</h1>
-  <p class="meta"><a href="index.php">&larr; Neue Studie prüfen</a> · <a href="methoden.php">Methoden</a> · <a href="../">Start</a> · <span id="count"><?= count($rows) ?></span> Einträge</p>
+  <p class="meta"><a href="index.php">&larr; Neue Studie prüfen</a> · <a href="../methoden.php">Methoden</a> · <a href="../">Start</a> · <span id="count"><?= count($rows) ?></span> Einträge</p>
 
 <?php if ($error): ?>
   <div class="err"><?= $esc($error) ?></div>

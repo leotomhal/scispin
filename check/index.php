@@ -275,7 +275,7 @@ function render(d) {
           <h3>Wie wurde das untersucht?</h3>
           <p><strong>${esc(a.methodik_klartext.study_type)}.</strong> ${esc(a.methodik_klartext.erklaerung)}${
             (a.methodik_klartext.study_type_key && a.methodik_klartext.study_type_key !== 'andere')
-            ? ` <a href="methoden.php#${esc(a.methodik_klartext.study_type_key)}" target="_blank" rel="noopener">Was bedeutet das?</a>` : ''}</p>
+            ? ` <a href="../methoden.php#${esc(a.methodik_klartext.study_type_key)}" target="_blank" rel="noopener">Was bedeutet das?</a>` : ''}</p>
           ${(a.methodik_klartext.fehlende_angaben||[]).length
             ? '<p><em>Im Text nicht angegeben:</em></p>' + li(a.methodik_klartext.fehlende_angaben) : ''}
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Datenschutzerklärung – Studien-Check</title>
-<link rel="stylesheet" href="../assets/scispin.css">
+<link rel="stylesheet" href="assets/scispin.css">
 <style>
   body { font-family: system-ui, sans-serif; color:#1a1a1a; background:#f7f7f8; margin:0; line-height:1.6; }
   header { border-bottom:1px solid #e6e6e6; background:#fff; }
@@ -25,7 +25,7 @@
     Diese Seite ist bewusst leer ausgeliefert.
   </div>
 </main>
-<script>window.SCISPIN = { root: '../', active: '' };</script>
-<script src="../assets/chrome.js"></script>
+<script>window.SCISPIN = { root: '', active: '' };</script>
+<script src="assets/chrome.js"></script>
 </body>
 </html>
