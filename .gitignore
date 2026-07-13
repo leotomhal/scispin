@@ -9,6 +9,11 @@ config.php
 .env
 .env.*
 
+# Server-spezifischer Passwortschutz – niemals ins Repo (Pfad/Hash sind lokal)
+.htaccess
+.htpasswd
+!.htaccess.example
+
 # PHP / Composer (falls später genutzt)
 /vendor/
 composer.lock
