@@ -21,6 +21,7 @@ gemeinsame Kostenbremse.
 
 ```
 index.php                Startseite mit beiden Modi
+so-funktionierts.php     Erklärt beide Tools (Bedienung + Ausgabe)
 methoden.php             Methoden & Evidenz (Seitenweit)
 impressum.php            Impressum (Seitenweit)
 datenschutz.php          Datenschutz (Seitenweit)
