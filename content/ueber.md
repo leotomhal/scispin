@@ -9,6 +9,6 @@ Markierte Stellen zeigen, was sich verändert hat. Gestrichene Passagen – etwa
 
 Das Werkzeug ist bewusst zugespitzt. Es ersetzt kein Urteil, sondern schärft den Blick dafür, wie Framing eine Aussage trägt oder kippt.
 
-Ein Projekt von Tom Leonhardt
+Ein Projekt von *Tom Leonhardt*
 
 [← Zurück zum Regler](index.html)
