@@ -21,6 +21,9 @@ gemeinsame Kostenbremse.
 
 ```
 index.php                Startseite mit beiden Modi
+methoden.php             Methoden & Evidenz (Seitenweit)
+impressum.php            Impressum (Seitenweit)
+datenschutz.php          Datenschutz (Seitenweit)
 schema.sql               Alle DB-Tabellen (einmal importieren)
 lib/                     GETEILTER KERN
   config.example.php       Vorlage -> nach lib/config.php kopieren und ausfüllen
@@ -31,7 +34,7 @@ assets/                  GETEILTES AUSSEHEN (beide Modi)
   scispin.css              Design-Tokens, Marke, Kopfleiste, Footer
   chrome.js                fügt Navigationsleiste + Footer auf jeder Seite ein
 check/                   Modus "Studien-Check"
-  index.php  archive.php  methoden.php  impressum.php  datenschutz.php
+  index.php  archive.php   Startformular + durchsuchbares Archiv
   api/analyze.php          Orchestrierung (Extraktion -> Cache -> LLM -> Archiv)
   lib/                     extract.php · badge.php · analyze_llm.php · store.php
 spin/                    Modus "SciSpin-O-Mat"

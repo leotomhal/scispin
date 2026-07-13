@@ -62,7 +62,7 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Methoden & Evidenz – Studien-Check</title>
 <meta name="description" content="Welche Studientypen es gibt und wie tragfähig ihre Aussagen sind.">
-<link rel="stylesheet" href="../assets/scispin.css">
+<link rel="stylesheet" href="assets/scispin.css">
 <style>
   :root { --fg:#1a1a1a; --muted:#6b6b6b; --line:#e6e6e6; --bg:#f7f7f8; --card:#fff;
           --gruen:#2e7d32; --gelb:#f9a825; --rot:#c62828; --grau:#9e9e9e; --accent:#3b5bdb; }
@@ -147,7 +147,7 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
     </div>
   <?php endforeach; ?>
 </main>
-<script>window.SCISPIN = { root: '../', active: 'methoden' };</script>
-<script src="../assets/chrome.js"></script>
+<script>window.SCISPIN = { root: '', active: 'methoden' };</script>
+<script src="assets/chrome.js"></script>
 </body>
 </html>

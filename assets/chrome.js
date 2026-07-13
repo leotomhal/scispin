@@ -13,7 +13,7 @@
     ['check',    'Prüfen',    'check/'],
     ['spin',     'Vorführen', 'spin/'],
     ['archiv',   'Archiv',    'check/archive.php'],
-    ['methoden', 'Methoden',  'check/methoden.php'],
+    ['methoden', 'Methoden',  'methoden.php'],
   ];
 
   var nav = document.createElement('header');
@@ -34,8 +34,8 @@
   foot.innerHTML =
     '<div class="in">' +
       '<span>Automatisierte Werkzeuge, kein Ersatz für fachliche Prüfung.</span>' +
-      '<span><a href="' + href('check/impressum.php') + '">Impressum</a> · ' +
-      '<a href="' + href('check/datenschutz.php') + '">Datenschutz</a></span>' +
+      '<span><a href="' + href('impressum.php') + '">Impressum</a> · ' +
+      '<a href="' + href('datenschutz.php') + '">Datenschutz</a></span>' +
     '</div>';
   document.body.appendChild(foot);
 })();
