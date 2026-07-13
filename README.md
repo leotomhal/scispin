@@ -21,16 +21,19 @@ gemeinsame Kostenbremse.
 
 ```
 index.php                Startseite mit beiden Modi
-so-funktionierts.php     Erklärt beide Tools (Bedienung + Ausgabe)
+so-funktionierts.php     Erklärt beide Tools (Hülle -> content/so-funktionierts.md)
 methoden.php             Methoden & Evidenz (Seitenweit)
-impressum.php            Impressum (Seitenweit)
-datenschutz.php          Datenschutz (Seitenweit)
+impressum.php            Impressum (Hülle -> content/impressum.md)
+datenschutz.php          Datenschutz (Hülle -> content/datenschutz.md)
+content/                 TEXTE zum Bearbeiten (Markdown, siehe unten)
+  so-funktionierts.md · impressum.md · datenschutz.md · ueber.md
 schema.sql               Alle DB-Tabellen (einmal importieren)
 lib/                     GETEILTER KERN
   config.example.php       Vorlage -> nach lib/config.php kopieren und ausfüllen
   http.php                 cURL-Wrapper
   llm.php                  Anthropic-Call + robuste JSON-Extraktion
   db.php                   Verbindung, Rate-Limit, Tages-Kostenbremse
+  markdown.php · page.php   Rendert content/*.md ins geteilte Layout
 assets/                  GETEILTES AUSSEHEN (beide Modi)
   scispin.css              Design-Tokens, Marke, Kopfleiste, Footer
   chrome.js                fügt Navigationsleiste + Footer auf jeder Seite ein
@@ -39,7 +42,8 @@ check/                   Modus "Studien-Check"
   api/analyze.php          Orchestrierung (Extraktion -> Cache -> LLM -> Archiv)
   lib/                     extract.php · badge.php · analyze_llm.php · store.php
 spin/                    Modus "SciSpin-O-Mat"
-  index.html  preview.html  ueber.html  style.css  app.js  beispiele.js
+  index.html  preview.html  app.js  beispiele.js  style.css
+  ueber.php                Hülle -> content/ueber.md
   demo_payload.js          Demo-Daten für preview.html (ohne Server)
   api/generate.php         Endpunkt für EINE Stufe (Cache -> LLM -> Cache)
   api/prompt.php           Prompt bauen + Modellantwort validieren
@@ -52,6 +56,25 @@ Beide Modi teilen sich eine **Kopfleiste** (Navigation zwischen „Prüfen" und
 „Vorführen") und eine Designsprache aus `assets/`. Aus dem Studien-Check führt
 eine **Brücke** direkt in den SciSpin-O-Mat: Der Ergebnis-Text lässt sich per
 Klick übernehmen und dort weiterverarbeiten.
+
+## Inhalte bearbeiten
+
+Die Texte der Info-Seiten liegen als **Markdown** in `content/` – kein Backend,
+keine DB. Bearbeiten am einfachsten direkt auf GitHub (mit Live-Vorschau):
+Datei unter `content/` öffnen → Stift → ändern → „Commit", dann per Updater
+`tools/update.php?...&action=apply` einspielen.
+
+Formatierung: `##` Überschrift, `**fett**`, `*kursiv*`, `- ` Liste, `1. `
+nummeriert, `[Text](link.php)`, `> ` Zitat. Zeilen, die mit `<` beginnen, sind
+kleine HTML-Bausteine (z. B. die Ampel-Grafik) – die kannst du in Ruhe lassen,
+wenn du nur Text änderst. Layout, Kopfleiste und Design kommen automatisch dazu.
+
+| Seite | Text-Datei |
+|---|---|
+| So funktioniert's | `content/so-funktionierts.md` |
+| Über den SciSpin-O-Mat | `content/ueber.md` |
+| Impressum | `content/impressum.md` |
+| Datenschutz | `content/datenschutz.md` |
 
 ## Ohne Server ansehen
 
