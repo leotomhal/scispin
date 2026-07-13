@@ -26,14 +26,15 @@ $esc = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studien-Check</title>
 <meta name="description" content="Was sagt eine Studie wirklich – und wie weit darf man mit der Aussage gehen?">
+<link rel="stylesheet" href="../assets/scispin.css">
 <style>
   :root {
     --fg: #1a1a1a; --muted: #6b6b6b; --line: #e6e6e6; --bg: #f7f7f8; --card:#fff;
     --gruen: #2e7d32; --gelb: #f9a825; --rot: #c62828; --grau: #9e9e9e;
-    --accent: #1565c0;
+    --accent: #3b5bdb;
   }
   * { box-sizing: border-box; }
-  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  body { font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
          color: var(--fg); background: var(--bg); margin: 0; line-height: 1.55; }
   a { color: var(--accent); }
 
@@ -127,13 +128,6 @@ $esc = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
 </head>
 <body>
 
-<header>
-  <div class="bar">
-    <a class="brand" href="./"><span class="mark"></span>Studien-Check</a>
-    <nav class="nav"><a href="../">Start</a> &nbsp; <a href="methoden.php">Methoden</a> &nbsp; <a href="archive.php">Archiv &rarr;</a></nav>
-  </div>
-</header>
-
 <main>
   <h1>Was sagt eine Studie wirklich – und wie weit darf man mit der Aussage gehen?</h1>
   <p class="lead">Link zu einer wissenschaftlichen Studie einfügen und prüfen.</p>
@@ -165,13 +159,6 @@ $esc = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
   </div>
 <?php endif; ?>
 </main>
-
-<footer>
-  <div class="foot">
-    <span>Automatisierte Einschätzung, kein Ersatz für fachliche Prüfung.</span>
-    <span><a href="impressum.php">Impressum</a> · <a href="datenschutz.php">Datenschutz</a></span>
-  </div>
-</footer>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -307,6 +294,8 @@ function render(d) {
         </section>
       </div>
 
+      <a class="sci-bridge" data-seed="${esc(a.summary || a.core_statement || '')}" href="../spin/">→ Wie überdreht man das? Im SciSpin-O-Mat zeigen</a>
+
       <p class="disclaimer">Automatisierte Einschätzung, kein Ersatz für fachliche Prüfung.
       ${abstractOnly ? 'Beruht nur auf dem Abstract und ist entsprechend eingeschränkt.' : ''}</p>
     </div>`;
@@ -318,6 +307,12 @@ $('#url').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
 // Letzte Analysen: Klick prüft die Studie erneut
 document.querySelectorAll('.recent-item').forEach(el => {
   el.addEventListener('click', () => { $('#url').value = el.dataset.url; run(); });
+});
+
+// Brücke: Ergebnis-Text an den SciSpin-O-Mat übergeben (dann folgt der Link).
+out.addEventListener('click', e => {
+  const bridge = e.target.closest('.sci-bridge');
+  if (bridge) { try { sessionStorage.setItem('scispin_seed', bridge.dataset.seed || ''); } catch (_) {} }
 });
 
 // Umschalter Einfach / Ausführlich
@@ -332,5 +327,7 @@ out.addEventListener('click', e => {
   card.querySelector('.view-ausfuehrlich').style.display = (v === 'ausfuehrlich') ? '' : 'none';
 });
 </script>
+<script>window.SCISPIN = { root: '../', active: 'check' };</script>
+<script src="../assets/chrome.js"></script>
 </body>
 </html>

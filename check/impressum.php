@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Impressum – Studien-Check</title>
+<link rel="stylesheet" href="../assets/scispin.css">
 <style>
   body { font-family: system-ui, sans-serif; color:#1a1a1a; background:#f7f7f8; margin:0; line-height:1.6; }
   header { border-bottom:1px solid #e6e6e6; background:#fff; }
@@ -15,7 +16,6 @@
 </style>
 </head>
 <body>
-<header><div class="bar"><a class="brand" href="./">&larr; Studien-Check</a></div></header>
 <main>
   <h1>Impressum</h1>
   <div class="todo">
@@ -23,5 +23,7 @@
     gemäß den geltenden Vorgaben (§ 5 DDG/TMG) füllen. Diese Seite ist bewusst leer ausgeliefert.
   </div>
 </main>
+<script>window.SCISPIN = { root: '../', active: '' };</script>
+<script src="../assets/chrome.js"></script>
 </body>
 </html>

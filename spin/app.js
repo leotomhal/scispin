@@ -33,6 +33,20 @@ beispielSelect.addEventListener("change",()=>{
   const i=beispielSelect.value; if(i!=="") textarea.value=window.SCISPIN_BEISPIELE[i].text;
 });
 
+// Brücke aus dem Studien-Check: dort übernommenen Text vorbefüllen.
+try {
+  const seed = sessionStorage.getItem("scispin_seed");
+  if (seed) {
+    sessionStorage.removeItem("scispin_seed");
+    textarea.value = seed;
+    const note = document.createElement("div");
+    note.className = "sci-seed-note";
+    note.textContent = 'Text aus dem Studien-Check übernommen – jetzt „Skala anwenden".';
+    textarea.parentNode.insertBefore(note, textarea);
+    startBtn.focus();
+  }
+} catch (_) {}
+
 startBtn.addEventListener("click", starten);
 
 slider.addEventListener("input",()=> markLabel(Number(slider.value)));

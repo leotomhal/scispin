@@ -27,6 +27,9 @@ lib/                     GETEILTER KERN
   http.php                 cURL-Wrapper
   llm.php                  Anthropic-Call + robuste JSON-Extraktion
   db.php                   Verbindung, Rate-Limit, Tages-Kostenbremse
+assets/                  GETEILTES AUSSEHEN (beide Modi)
+  scispin.css              Design-Tokens, Marke, Kopfleiste, Footer
+  chrome.js                fügt Navigationsleiste + Footer auf jeder Seite ein
 check/                   Modus "Studien-Check"
   index.php  archive.php  methoden.php  impressum.php  datenschutz.php
   api/analyze.php          Orchestrierung (Extraktion -> Cache -> LLM -> Archiv)
@@ -38,8 +41,13 @@ spin/                    Modus "SciSpin-O-Mat"
   api/prompt.php           Prompt bauen + Modellantwort validieren
   api/system_prompt.de.txt Systemprompt (ohne Code änderbar)
   api/demo_data.php        Statische 7-Stufen-Demo (demo_mode)
-tools/connectivity.php   Vorab-Check nach Deployment – danach LÖSCHEN
+tools/update.php         Self-Updater (siehe unten)
 ```
+
+Beide Modi teilen sich eine **Kopfleiste** (Navigation zwischen „Prüfen" und
+„Vorführen") und eine Designsprache aus `assets/`. Aus dem Studien-Check führt
+eine **Brücke** direkt in den SciSpin-O-Mat: Der Ergebnis-Text lässt sich per
+Klick übernehmen und dort weiterverarbeiten.
 
 ## Ohne Server ansehen
 
@@ -58,10 +66,8 @@ Demo-Daten. Regler ziehen.
    - `anthropic_model` gegen die aktuelle Anthropic-Doku prüfen,
    - zum Einrichten `debug => true`, im Livebetrieb wieder `false`.
 4. Alle Dateien per FTP hochladen (Struktur beibehalten).
-5. **`tools/connectivity.php`** im Browser aufrufen. Prüft DB + ausgehende
-   HTTPS-Verbindungen (Anthropic/Crossref/Europe PMC). Läuft alles durch:
-   **die Datei löschen.**
-6. Startseite aufrufen und beide Modi testen.
+5. Startseite aufrufen und beide Modi testen. Klappt ein echter Studien-Link
+   bzw. eine Spin-Analyse, sind DB und ausgehende HTTPS-Verbindungen in Ordnung.
 
 `lib/config.php` enthält Geheimnisse und wird durch `.gitignore` **niemals**
 eingecheckt.
@@ -74,9 +80,10 @@ statische Beispieldaten ohne API- oder DB-Zugriff.
 ## Der kritische Punkt
 
 Beide Modi stehen und fallen mit **ausgehenden HTTPS-Verbindungen** vom Server zu
-den externen APIs. Genau das prüft `tools/connectivity.php`. Zeigt es `HTTP 0`,
-blockiert der Hoster den ausgehenden Verkehr – dann beim Support klären, bevor du
-Zeit in Debugging steckst.
+den externen APIs (Anthropic, Crossref, Europe PMC). Schlägt eine echte Analyse
+mit Server-/Zeitüberschreitungsfehlern fehl, blockiert der Hoster womöglich den
+ausgehenden Verkehr – dann beim Support klären, bevor du Zeit in Debugging steckst.
+(Bei `debug => true` geben die Endpunkte konkrete Fehlermeldungen aus.)
 
 ## Kostenschutz (nicht optional)
 

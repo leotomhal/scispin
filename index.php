@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SciSpin – Wissenschaftskommunikation prüfen und vorführen</title>
 <meta name="description" content="Zwei Werkzeuge für Wissenschaftskommunikation: Studien-Check erkennt Spin, der SciSpin-O-Mat führt ihn vor.">
+<link rel="stylesheet" href="assets/scispin.css">
 <style>
   :root{
     --fg:#1a2030; --muted:#566076; --dim:#8b94a8; --line:#dce1ec; --bg:#f4f6fb; --card:#fff;
     --gruen:#1f9d5c; --gelb:#f9a825; --rot:#e0492a; --accent:#3b5bdb; --cold:#1593a8;
   }
   *{box-sizing:border-box;}
-  body{margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg);
+  body{margin:0; font-family:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg);
        line-height:1.6;
        background:radial-gradient(1200px 600px at 70% -10%, rgba(59,91,219,.07), transparent 60%), var(--bg);}
   .wrap{max-width:900px; margin:0 auto; padding:0 24px;}
-  header{padding:72px 0 24px;}
+  header.hero-wrap{padding:56px 0 24px;}
   .eyebrow{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent);
            font-weight:600; margin:0 0 14px;}
   h1{font-size:clamp(32px,5.5vw,52px); line-height:1.05; letter-spacing:-.02em; margin:0 0 18px;}
@@ -41,12 +42,10 @@
   .concept{background:var(--card); border:1px solid var(--line); border-radius:14px;
            padding:22px 24px; margin:8px 0 24px; color:var(--muted);}
   .concept strong{color:var(--fg);}
-  footer{color:var(--dim); font-size:.82rem; padding:24px 0 56px;}
-  footer a{color:var(--dim);}
 </style>
 </head>
 <body>
-<header class="wrap">
+<header class="wrap hero-wrap">
   <p class="eyebrow">Wissenschaftskommunikation</p>
   <h1>Wie weit trägt eine Aussage – und wo <span class="turn">kippt</span> sie?</h1>
   <p class="lede">Zwei Werkzeuge, dieselbe Frage: Deckt sich die Kommunikation mit dem,
@@ -79,9 +78,7 @@
   </div>
 </main>
 
-<footer class="wrap">
-  Automatisierte Werkzeuge, kein Ersatz für fachliche Prüfung. ·
-  <a href="check/impressum.php">Impressum</a> · <a href="check/datenschutz.php">Datenschutz</a>
-</footer>
+<script>window.SCISPIN = { root: '', active: 'home' };</script>
+<script src="assets/chrome.js"></script>
 </body>
 </html>

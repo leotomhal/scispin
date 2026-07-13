@@ -81,11 +81,12 @@ $renderDetail = function(?string $resultJson) use ($esc, $ul): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studien-Check – Archiv</title>
+<link rel="stylesheet" href="../assets/scispin.css">
 <style>
   :root { --fg:#1a1a1a; --muted:#666; --line:#e2e2e2; --bg:#fafafa;
-          --gruen:#2e7d32; --gelb:#f9a825; --rot:#c62828; --grau:#9e9e9e; --blue:#1565c0; }
+          --gruen:#2e7d32; --gelb:#f9a825; --rot:#c62828; --grau:#9e9e9e; --blue:#3b5bdb; }
   * { box-sizing:border-box; }
-  body { font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg);
+  body { font-family:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg);
          background:var(--bg); margin:0; }
   main { max-width:1000px; margin:0 auto; padding:2rem 1.2rem 4rem; }
   h1 { font-size:1.4rem; margin:0 0 .2rem; }
@@ -238,5 +239,7 @@ $renderDetail = function(?string $resultJson) use ($esc, $ul): string {
   });
 })();
 </script>
+<script>window.SCISPIN = { root: '../', active: 'archiv' };</script>
+<script src="../assets/chrome.js"></script>
 </body>
 </html>

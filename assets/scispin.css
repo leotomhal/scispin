@@ -1,0 +1,77 @@
+/* SciSpin – geteilte Designsprache für beide Modi (check/ + spin/).
+   Marken-Schriftzug + gemeinsame Kopfleiste/Footer, damit die Tools als
+   EIN Produkt erscheinen. Tool-spezifische Styles bleiben in ihren Dateien. */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root{
+  /* Markenverlauf: die Kernidee (zu komplex -> gut -> zu reißerisch) */
+  --sci-cold:#1593a8;
+  --sci-good:#1f9d5c;
+  --sci-hot:#e0492a;
+  --sci-accent:#3b5bdb;
+
+  --sci-ink:#1a2030;
+  --sci-muted:#566076;
+  --sci-dim:#8b94a8;
+  --sci-line:#dce1ec;
+  --sci-bg:#f4f6fb;
+  --sci-card:#ffffff;
+
+  --sci-font:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sci-display:'Fraunces',Georgia,serif;
+  --sci-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+
+/* ---------- Kopfleiste (per assets/chrome.js eingefügt) ---------- */
+.sci-nav{
+  position:sticky; top:0; z-index:50; padding:0;
+  background:rgba(255,255,255,.88); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--sci-line);
+}
+.sci-nav .in{
+  max-width:1060px; margin:0 auto; padding:.6rem 24px;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+}
+.sci-brand{
+  font-family:var(--sci-display); font-weight:900; font-size:1.2rem;
+  letter-spacing:-.01em; text-decoration:none; white-space:nowrap;
+  background:linear-gradient(90deg,var(--sci-cold),var(--sci-good) 50%,var(--sci-hot));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.sci-links{ display:flex; gap:.2rem; flex-wrap:wrap; align-items:center;
+  font-family:var(--sci-font); }
+.sci-links a{
+  font-size:.9rem; color:var(--sci-muted); text-decoration:none;
+  padding:.35rem .6rem; border-radius:8px; transition:background .12s,color .12s;
+}
+.sci-links a:hover{ color:var(--sci-ink); background:rgba(59,91,219,.07); }
+.sci-links a.on{ color:var(--sci-accent); font-weight:600; }
+
+/* ---------- Footer (per assets/chrome.js eingefügt) ---------- */
+.sci-foot{ border-top:1px solid var(--sci-line); background:var(--sci-card); margin-top:2.5rem; padding:0; }
+.sci-foot .in{
+  max-width:1060px; margin:0 auto; padding:1.1rem 24px;
+  display:flex; flex-wrap:wrap; gap:.4rem 1rem; justify-content:space-between;
+  font-family:var(--sci-font); font-size:.82rem; color:var(--sci-dim);
+}
+.sci-foot a{ color:var(--sci-dim); }
+.sci-foot a:hover{ color:var(--sci-accent); }
+
+/* ---------- Brücke: Button im Checker-Ergebnis ---------- */
+.sci-bridge{
+  display:inline-flex; align-items:center; gap:.4rem; margin-top:1.1rem;
+  font-family:var(--sci-font); font-size:.92rem; font-weight:600;
+  text-decoration:none; color:#fff; padding:.6rem 1rem; border-radius:10px;
+  background:linear-gradient(90deg,var(--sci-accent),var(--sci-hot));
+  transition:filter .12s;
+}
+.sci-bridge:hover{ filter:brightness(1.07); }
+
+/* ---------- Brücke: Hinweis im Spin-O-Mat, wenn Text übernommen wurde ---------- */
+.sci-seed-note{
+  font-family:var(--sci-mono); font-size:11px; letter-spacing:.04em;
+  color:var(--sci-good); margin:0 0 8px;
+  display:flex; align-items:center; gap:.4rem;
+}
+.sci-seed-note::before{ content:"↳"; font-weight:700; }
