@@ -50,6 +50,7 @@
   <h1>Wie weit trägt eine Aussage – und wo <span class="turn">kippt</span> sie?</h1>
   <p class="lede">Zwei Werkzeuge, dieselbe Frage: Deckt sich die Kommunikation mit dem,
   was die Wissenschaft hergibt? Das eine erkennt Spin, das andere führt ihn vor.</p>
+  <p style="margin:2px 0 0"><a href="so-funktionierts.php" style="color:var(--accent);font-weight:600">So funktioniert's →</a></p>
 </header>
 
 <main class="wrap">

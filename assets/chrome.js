@@ -10,10 +10,11 @@
   function href(p) { return root + p; }
 
   var links = [
-    ['check',    'Prüfen',    'check/'],
-    ['spin',     'Vorführen', 'spin/'],
-    ['archiv',   'Archiv',    'check/archive.php'],
-    ['methoden', 'Methoden',  'methoden.php'],
+    ['check',    'Prüfen',          'check/'],
+    ['spin',     'Vorführen',       'spin/'],
+    ['hilfe',    'So funktioniert\'s', 'so-funktionierts.php'],
+    ['archiv',   'Archiv',          'check/archive.php'],
+    ['methoden', 'Methoden',        'methoden.php'],
   ];
 
   var nav = document.createElement('header');
