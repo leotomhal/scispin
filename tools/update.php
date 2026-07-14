@@ -120,13 +120,14 @@ function up_latest_tag(string $repo, string $token): ?string {
     return $best;
 }
 
-/** VERSION-Datei eines Refs über die Contents-API lesen (für den 'branch'-Kanal). */
-function up_remote_version(string $repo, string $ref, string $token): ?string {
-    $r = up_gh_api('https://api.github.com/repos/' . $repo . '/contents/VERSION?ref=' . rawurlencode($ref), $token);
+/** Neuesten Commit eines Refs holen: ['sha'=>..., 'date'=>...] oder null. */
+function up_latest_commit(string $repo, string $ref, string $token): ?array {
+    $r = up_gh_api('https://api.github.com/repos/' . $repo . '/commits/' . rawurlencode($ref), $token);
     if ($r['status'] !== 200 || !$r['body']) return null;
     $j = json_decode($r['body'], true);
-    if (!isset($j['content'])) return null;
-    return trim((string)base64_decode(str_replace("\n", '', $j['content'])));
+    if (!isset($j['sha'])) return null;
+    $date = $j['commit']['committer']['date'] ?? ($j['commit']['author']['date'] ?? '');
+    return ['sha' => (string)$j['sha'], 'date' => (string)$date];
 }
 
 /** Rekursiv das einzige Wurzelverzeichnis im entpackten Zip finden. */
@@ -231,13 +232,33 @@ function scispin_update_main(): void {
 
     $localVersion = trim((string)@file_get_contents(SCISPIN_APP_ROOT . '/VERSION')) ?: '0.0.0';
 
-    // --- Zielversion + Ref bestimmen ---
+    // --- Ziel bestimmen (channel-abhängig) ---
     if ($channel === 'branch') {
+        // Branch-Modus: 'apply' spielt IMMER den aktuellen Branch-Stand ein
+        // (nur tatsächlich geänderte Dateien) – keine Versionsnummer nötig.
         $ref = $branch;
-        $remoteVersion = up_remote_version($repo, $branch, $token) ?? '?';
         $refLabel = "Branch '$branch'";
+        $commit = up_latest_commit($repo, $branch, $token);
+
+        echo "SciSpin Self-Updater\n";
+        echo "Repo:                 $repo\n";
+        echo "Kanal:                branch ($refLabel)\n";
+        echo "Installierte Version: $localVersion\n";
+        if ($commit) {
+            echo "Aktueller Stand:      " . substr($commit['sha'], 0, 7) . " (" . $commit['date'] . ")\n";
+        }
+        echo "\n";
+
+        if ($action !== 'apply') {
+            echo "Modus 'check' – es wurde nichts verändert.\n";
+            echo "Im Branch-Modus spielt 'apply' immer den aktuellen $refLabel-Stand ein –\n";
+            echo "nur geänderte Dateien werden geschrieben, keine Versionsnummer nötig.\n";
+            echo "(Vorschau: ?token=…&action=apply&dry_run=1)\n";
+            return;
+        }
+        // apply: kein Versions-Gate -> direkt weiter zum Download
     } else {
-        // Bevorzugt ein veröffentlichtes Release; sonst Fallback auf das neueste Tag.
+        // Release-Modus: bevorzugt ein veröffentlichtes Release; sonst neuestes Tag.
         $ref = '';
         $refLabel = '';
         $r = up_gh_api('https://api.github.com/repos/' . $repo . '/releases/latest', $token);
@@ -257,29 +278,26 @@ function scispin_update_main(): void {
             return;
         }
         $remoteVersion = ltrim($ref, 'vV');
-    }
+        $updateAvailable = version_compare($remoteVersion, ltrim($localVersion, 'vV'), '>');
 
-    $updateAvailable = version_compare($remoteVersion, ltrim($localVersion, 'vV'), '>')
-        || ($channel === 'branch' && $remoteVersion !== '?' && $remoteVersion !== $localVersion);
+        echo "SciSpin Self-Updater\n";
+        echo "Repo:            $repo\n";
+        echo "Kanal:           release ($refLabel)\n";
+        echo "Installiert:     $localVersion\n";
+        echo "Verfügbar:       $remoteVersion\n";
+        echo "Update nötig:    " . ($updateAvailable ? "JA" : "nein") . "\n\n";
 
-    echo "SciSpin Self-Updater\n";
-    echo "Repo:            $repo\n";
-    echo "Kanal:           $channel ($refLabel)\n";
-    echo "Installiert:     $localVersion\n";
-    echo "Verfügbar:       $remoteVersion\n";
-    echo "Update nötig:    " . ($updateAvailable ? "JA" : "nein") . "\n\n";
-
-    if ($action !== 'apply') {
-        echo "Modus 'check' – es wurde nichts verändert.\n";
-        echo $updateAvailable
-            ? "Zum Einspielen: ?token=…&action=apply  (Vorschau: &dry_run=1)\n"
-            : "Alles aktuell.\n";
-        return;
-    }
-
-    if (!$updateAvailable && !$dryRun) {
-        echo "Bereits aktuell – kein Update eingespielt.\n";
-        return;
+        if ($action !== 'apply') {
+            echo "Modus 'check' – es wurde nichts verändert.\n";
+            echo $updateAvailable
+                ? "Zum Einspielen: ?token=…&action=apply  (Vorschau: &dry_run=1)\n"
+                : "Alles aktuell.\n";
+            return;
+        }
+        if (!$updateAvailable && !$dryRun) {
+            echo "Bereits aktuell – kein Update eingespielt.\n";
+            return;
+        }
     }
 
     // --- Download ---

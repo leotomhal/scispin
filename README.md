@@ -158,15 +158,21 @@ tools/update.php?token=SECRET&action=apply&dry_run=1  # Vorschau: was würde sic
 tools/update.php?token=SECRET&action=apply            # Update wirklich einspielen
 ```
 
-Der Versionsvergleich nutzt die `VERSION`-Datei im Projektwurzel. Dateien werden
-nur **überlagert** (kopiert), nie gelöscht; `lib/config.php` und alles unter
-`update_protect` bleibt unangetastet. Zip-Slip-Schutz verhindert Schreibzugriffe
-außerhalb des Projektverzeichnisses.
+Dateien werden nur **überlagert** (kopiert), nie gelöscht; `lib/config.php` und
+alles unter `update_protect` bleibt unangetastet. Zip-Slip-Schutz verhindert
+Schreibzugriffe außerhalb des Projektverzeichnisses.
 
-**Neue Version veröffentlichen:** `VERSION` erhöhen, committen und ein Git-Tag
-`vX.Y.Z` anlegen/pushen. Der `release`-Kanal bevorzugt ein veröffentlichtes
-GitHub-Release, fällt aber automatisch auf das **neueste Tag** zurück – ein
-gepushter Tag genügt also, ein Release muss nicht extra veröffentlicht werden.
+**Die beiden Kanäle unterscheiden sich beim `apply`:**
+
+- **`branch`** (einfachster Weg, ideal für Inhalts-Edits): `apply` spielt
+  **immer** den aktuellen Stand des Branches ein und schreibt nur tatsächlich
+  geänderte Dateien. **Keine Versionsnummer nötig** – einfach `content/*.md` (oder
+  anderes) auf `main` committen und `apply` aufrufen. `check` zeigt den aktuellen
+  Commit-Stand.
+- **`release`**: `apply` spielt nur ein, wenn eine höhere Version verfügbar ist.
+  Zum Veröffentlichen `VERSION` erhöhen und ein Git-Tag `vX.Y.Z` anlegen/pushen
+  (bevorzugt ein GitHub-Release, sonst genügt das neueste Tag). Für kontrollierte
+  Releases.
 
 ## Modell-String
 
