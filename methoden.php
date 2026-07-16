@@ -1,57 +1,13 @@
 <?php
 declare(strict_types=1);
 
-// Methodentypen: key => [Label, Rang, Gruppe, kurz, zeigt, grenzen]
-$M = [
-  'meta_analyse' => ['Meta-Analyse', 'Hoch', 'pyr',
-    'Fasst die Ergebnisse vieler Einzelstudien rechnerisch zu einem Gesamtbild zusammen.',
-    'Ein über viele Studien gemitteltes, statistisch belastbares Bild.',
-    'Nur so gut wie die eingeschlossenen Studien; einseitige Auswahl oder unveröffentlichte Negativergebnisse (Publikationsbias) verzerren.'],
-  'systematic_review' => ['Systematische Übersichtsarbeit', 'Hoch', 'pyr',
-    'Sucht und bewertet nach festen, offengelegten Regeln alle Studien zu einer eng umrissenen Frage.',
-    'Den geordneten Stand der Forschung zu einer Frage.',
-    'Qualität hängt an der Sorgfalt der Suche; ohne Meta-Analyse keine zusammengefasste Effektgröße.'],
-  'rct' => ['Randomisierte kontrollierte Studie (RCT)', 'Hoch (Einzelstudie)', 'pyr',
-    'Teilnehmende werden zufällig auf Gruppen verteilt, z. B. Wirkstoff gegen Placebo.',
-    'Am ehesten Ursache und Wirkung, weil die Zufallszuteilung Störeinflüsse ausgleicht.',
-    'Oft kleine, ausgewählte Gruppen und künstliche Bedingungen; sagt wenig über den langfristigen Alltag.'],
-  'kohorte' => ['Kohortenstudie', 'Mittel', 'pyr',
-    'Begleitet Gruppen über die Zeit und vergleicht, wer welche Folgen entwickelt.',
-    'Zusammenhänge über die Zeit und Hinweise auf Risikofaktoren.',
-    'Keine zufällige Zuteilung – Ursache und Wirkung bleiben unsicher, Störvariablen sind möglich.'],
-  'fallkontroll' => ['Fall-Kontroll-Studie', 'Mittel', 'pyr',
-    'Vergleicht Menschen mit einer Erkrankung rückblickend mit Gesunden.',
-    'Mögliche Zusammenhänge; gut für seltene Erkrankungen.',
-    'Rückblickend und damit anfällig für Erinnerungs- und Auswahlfehler.'],
-  'querschnitt' => ['Querschnittsstudie / Befragung', 'Begrenzt', 'pyr',
-    'Eine Momentaufnahme: Daten werden einmalig erhoben und verglichen, oft per Umfrage. Korrelationsstudien beruhen meist hierauf.',
-    'Zusammenhänge zu einem Zeitpunkt.',
-    'Keine Aussage über zeitliche Abfolge oder Ursache – ein Zusammenhang ist noch keine Ursache.'],
-  'fallserie' => ['Fallbericht / Fallserie', 'Niedrig', 'pyr',
-    'Beschreibung einzelner Fälle ohne Vergleichsgruppe.',
-    'Erste Beobachtungen und Hypothesen.',
-    'Keine Verallgemeinerung, kein Beleg für Wirksamkeit.'],
-  'narrative_review' => ['Narrative Übersicht / Expertenmeinung', 'Niedrig (als Beleg)', 'pyr',
-    'Zusammenfassender Überblick oder Einschätzung von Fachleuten, ohne systematische Suche.',
-    'Orientierung, Kontext, Einordnung.',
-    'Auswahl subjektiv; kein systematischer Beleg.'],
-  'tiermodell' => ['Tierstudie / Tiermodell', 'Vorstufe', 'sonder',
-    'Untersuchung an Tieren.',
-    'Biologische Mechanismen und frühe Hinweise.',
-    'Nicht direkt auf den Menschen übertragbar.'],
-  'invitro' => ['Zell- / Laborstudie (in vitro)', 'Vorstufe', 'sonder',
-    'Versuche an Zellen oder Gewebe außerhalb des lebenden Organismus.',
-    'Mechanismen unter kontrollierten Bedingungen.',
-    'Großer Abstand zum lebenden Menschen.'],
-  'modellierung' => ['Modellierung / Simulation', 'Kontextabhängig', 'sonder',
-    'Rechnerische Modelle oder Simulationen statt direkter Messung.',
-    'Szenarien und Prognosen unter bestimmten Annahmen.',
-    'Steht und fällt mit den Annahmen; keine empirische Bestätigung.'],
-  'andere' => ['Sonstige / nicht eindeutig', '–', 'sonder',
-    'Der Studientyp ließ sich nicht eindeutig bestimmen.',
-    '–',
-    'Ohne klaren Typ keine Einordnung der Tragfähigkeit.'],
-];
+require __DIR__ . '/lib/markdown.php';
+require __DIR__ . '/lib/methoden_data.php';
+
+$raw = @file_get_contents(__DIR__ . '/content/methoden.md');
+[$intro, $entries] = sci_methoden_parse($raw !== false ? $raw : '');
+$M = sci_methoden_build($entries);
+
 $esc = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
 $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
 ?>
@@ -102,10 +58,7 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
   <h1>Methoden &amp; Evidenz</h1>
   <p class="lead">Welche Studientypen es gibt – und wie weit ihre Aussagen tragen.</p>
 
-  <div class="note">Diese Rangordnung stammt vor allem aus der Medizin und gilt für Aussagen über
-  Ursache und Wirkung beim Menschen. In anderen Feldern – etwa Modellierung, Sozial- oder
-  Geisteswissenschaften – greift sie nicht 1:1. Entscheidend bleibt nicht der Rang allein, sondern ob
-  die Methode zu dem passt, was behauptet wird.</div>
+  <?php if ($intro !== ''): ?><div class="note"><?= sci_md_inline($intro) ?></div><?php endif; ?>
 
   <div class="axis">▲ höhere Tragfähigkeit für Ursache-Wirkung-Aussagen</div>
   <div class="pyramid">
@@ -142,7 +95,7 @@ $pyr = array_filter($M, fn($v) => $v[2] === 'pyr');
       <h2><?= $esc($m[0]) ?></h2>
       <span class="rang"><?= $esc($m[1]) ?></span>
       <p><?= $esc($m[3]) ?></p>
-      <?php if ($m[4] !== '–'): ?><p><span class="k">Zeigt:</span> <?= $esc($m[4]) ?></p><?php endif; ?>
+      <?php if ($m[4] !== '–' && $m[4] !== ''): ?><p><span class="k">Zeigt:</span> <?= $esc($m[4]) ?></p><?php endif; ?>
       <p><span class="k">Grenzen:</span> <?= $esc($m[5]) ?></p>
     </div>
   <?php endforeach; ?>

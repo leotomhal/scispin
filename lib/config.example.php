@@ -75,8 +75,16 @@ return [
     // 'release' = neuestes veröffentlichtes Release-Tag, 'branch' = Kopf eines Branches.
     'update_channel' => getenv('UPDATE_CHANNEL') ?: 'release',
     'update_branch'  => getenv('UPDATE_BRANCH') ?: 'main',
-    // Diese Pfade werden beim Update NIE überschrieben (relativ zum Projektwurzel).
-    'update_protect' => ['lib/config.php'],
+    // Diese Pfade/Verzeichnisse werden beim Update NIE überschrieben (relativ
+    // zum Projektwurzel). content/ steht hier, weil die Texte jetzt über
+    // tools/edit.php live auf dem Server gepflegt werden – ein Update soll
+    // diese Änderungen nicht mit dem älteren Git-Stand überschreiben.
+    'update_protect' => ['lib/config.php', 'content'],
+
+    // ==================== Inhalts-Editor (tools/edit.php) ====================
+    // Bearbeitet content/*.md direkt auf dem Server, ohne GitHub. Eigenes,
+    // vom update_token UNABHÄNGIGES Geheimnis. Leer => Editor deaktiviert.
+    'content_edit_token' => getenv('CONTENT_EDIT_TOKEN') ?: '',
 
     // ==================== Debug ====================
     // true  = echte Fehlermeldungen an den Browser (NUR zum Einrichten).

@@ -162,8 +162,12 @@ function up_overlay(string $srcRoot, string $appRoot, array $protect, bool $dryR
         if (in_array($top, $skipDirs, true)) continue;
         if ($item->isDir()) continue;
 
-        // Geschützte Pfade nie anfassen.
-        if (in_array($rel, $protect, true)) { $skipped[] = $rel; continue; }
+        // Geschützte Pfade nie anfassen – einzelne Datei ODER ganzes Verzeichnis.
+        $isProtected = false;
+        foreach ($protect as $p) {
+            if ($rel === $p || strpos($rel, $p . '/') === 0) { $isProtected = true; break; }
+        }
+        if ($isProtected) { $skipped[] = $rel; continue; }
 
         // Zip-Slip-Schutz: Zielpfad muss innerhalb des Projektverzeichnisses liegen.
         $dest = $appReal . '/' . $rel;

@@ -22,11 +22,11 @@ gemeinsame Kostenbremse.
 ```
 index.php                Startseite mit beiden Modi
 so-funktionierts.php     Erklärt beide Tools (Hülle -> content/so-funktionierts.md)
-methoden.php             Methoden & Evidenz (Seitenweit)
+methoden.php             Methoden & Evidenz (Pyramide + Karten aus content/methoden.md)
 impressum.php            Impressum (Hülle -> content/impressum.md)
 datenschutz.php          Datenschutz (Hülle -> content/datenschutz.md)
-content/                 TEXTE zum Bearbeiten (Markdown, siehe unten)
-  so-funktionierts.md · impressum.md · datenschutz.md · ueber.md
+content/                 TEXTE zum Bearbeiten (siehe unten) – über tools/edit.php
+  so-funktionierts.md · impressum.md · datenschutz.md · ueber.md · methoden.md
 schema.sql               Alle DB-Tabellen (einmal importieren)
 lib/                     GETEILTER KERN
   config.example.php       Vorlage -> nach lib/config.php kopieren und ausfüllen
@@ -34,6 +34,7 @@ lib/                     GETEILTER KERN
   llm.php                  Anthropic-Call + robuste JSON-Extraktion
   db.php                   Verbindung, Rate-Limit, Tages-Kostenbremse
   markdown.php · page.php   Rendert content/*.md ins geteilte Layout
+  methoden_data.php        Parst content/methoden.md (Pyramide + Karten, kein Fließtext)
 assets/                  GETEILTES AUSSEHEN (beide Modi)
   scispin.css              Design-Tokens, Marke, Kopfleiste, Footer
   chrome.js                fügt Navigationsleiste + Footer auf jeder Seite ein
@@ -50,6 +51,7 @@ spin/                    Modus "SciSpin-O-Mat"
   api/system_prompt.de.txt Systemprompt (ohne Code änderbar)
   api/demo_data.php        Statische 7-Stufen-Demo (demo_mode)
 tools/update.php         Self-Updater (siehe unten)
+tools/edit.php           Inhalts-Editor: content/*.md live bearbeiten, ohne GitHub
 ```
 
 Beide Modi teilen sich eine **Kopfleiste** (Navigation zwischen „Prüfen" und
@@ -59,22 +61,48 @@ Klick übernehmen und dort weiterverarbeiten.
 
 ## Inhalte bearbeiten
 
-Die Texte der Info-Seiten liegen als **Markdown** in `content/` – kein Backend,
-keine DB. Bearbeiten am einfachsten direkt auf GitHub (mit Live-Vorschau):
-Datei unter `content/` öffnen → Stift → ändern → „Commit", dann per Updater
-`tools/update.php?...&action=apply` einspielen.
+Die Texte der Info-Seiten liegen als **Markdown** in `content/` – kein
+kompliziertes Backend, keine DB. Bearbeiten geht **direkt auf der Seite**,
+ohne GitHub:
 
-Formatierung: `##` Überschrift, `**fett**`, `*kursiv*`, `- ` Liste, `1. `
-nummeriert, `[Text](link.php)`, `> ` Zitat. Zeilen, die mit `<` beginnen, sind
-kleine HTML-Bausteine (z. B. die Ampel-Grafik) – die kannst du in Ruhe lassen,
-wenn du nur Text änderst. Layout, Kopfleiste und Design kommen automatisch dazu.
+```
+https://deine-domain/tools/edit.php?token=DEIN_CONTENT_EDIT_TOKEN
+```
+
+Seite aus der Liste wählen, Text im Feld ändern, „Speichern" – die Datei wird
+sofort auf dem Server geschrieben. Kein Commit, kein Update-Lauf, keine
+Versionsnummer nötig. Voraussetzung: `content_edit_token` ist in
+`lib/config.php` gesetzt (siehe unten).
+
+Formatierung (bei den Fließtext-Seiten): `##` Überschrift, `**fett**`,
+`*kursiv*`, `- ` Liste, `1. ` nummeriert, `[Text](link.php)`, `> ` Zitat.
+Zeilen, die mit `<` beginnen, sind kleine HTML-Bausteine (z. B. die
+Ampel-Grafik) – die kannst du in Ruhe lassen, wenn du nur Text änderst.
+Layout, Kopfleiste und Design kommen automatisch dazu.
+
+`content/methoden.md` ist ein Sonderfall (siehe Kommentar am Dateianfang):
+kein Fließtext, sondern ein Block pro Studientyp mit festen Feldern
+(Name/Rang/Gruppe/Kurz/Zeigt/Grenzen). Damit bleiben Pyramide und Karten
+automatisch gebaut – du änderst nur die Werte, nicht das Layout.
 
 | Seite | Text-Datei |
 |---|---|
 | So funktioniert's | `content/so-funktionierts.md` |
 | Über den SciSpin-O-Mat | `content/ueber.md` |
+| Methoden & Evidenz | `content/methoden.md` (strukturiert, siehe oben) |
 | Impressum | `content/impressum.md` |
 | Datenschutz | `content/datenschutz.md` |
+
+Neue Seiten unter `content/` legt `tools/edit.php` automatisch mit auf (jede
+`.md`-Datei im Ordner erscheint in der Liste) – eine ganz neue *Seite* im
+Sinne einer neuen URL braucht aber weiterhin eine kleine Hülle wie
+`impressum.php` und bleibt ein Code-Schritt.
+
+Wichtig fürs Zusammenspiel mit dem Self-Updater: `content/` steht standardmäßig
+in `update_protect` (siehe unten) – ein `tools/update.php?...&action=apply`
+überschreibt live bearbeitete Texte also nie mit dem (älteren) Git-Stand.
+Im Gegenzug werden Änderungen aus `tools/edit.php` **nicht** zurück nach
+GitHub geschrieben; das Repo enthält nur die ursprünglichen Ausgangstexte.
 
 ## Ohne Server ansehen
 
@@ -91,6 +119,8 @@ Demo-Daten. Regler ziehen.
    - `ip_salt_base` durch einen langen Zufallswert ersetzen,
    - `contact_mailto` (für den Crossref Polite Pool),
    - `anthropic_model` gegen die aktuelle Anthropic-Doku prüfen,
+   - `content_edit_token` setzen, um `tools/edit.php` zu aktivieren (Inhalte
+     ohne GitHub bearbeiten, siehe „Inhalte bearbeiten" unten),
    - zum Einrichten `debug => true`, im Livebetrieb wieder `false`.
 4. Alle Dateien per FTP hochladen (Struktur beibehalten).
 5. Startseite aufrufen und beide Modi testen. Klappt ein echter Studien-Link
@@ -148,7 +178,8 @@ GitHub-Repo auf den Server – kein FTP nötig. In `lib/config.php` konfiguriere
 - `github_token` – GitHub-Token mit Lese-Zugriff (Contents); **zwingend für das
   private Repo**, sonst schlägt der Download fehl.
 - `update_channel` – `release` (neuestes veröffentlichtes Tag) oder `branch`.
-- `update_protect` – Pfade, die nie überschrieben werden (Standard: `lib/config.php`).
+- `update_protect` – Pfade/Verzeichnisse, die nie überschrieben werden
+  (Standard: `lib/config.php` und `content` – siehe „Inhalte bearbeiten" oben).
 
 Aufruf im Browser:
 
