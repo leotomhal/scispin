@@ -10,6 +10,61 @@ Markdown, ohne Code-Fences. Deutsche Sprache. Keine erfundenen Fakten: Nutze nur
 was im gelieferten Material steht. Fehlt etwas, benenne es, statt es zu erfinden.
 
 ================================================================
+BEKANNTE FEHLERQUELLEN – zwingend vermeiden (gelten für BEIDE Phasen)
+================================================================
+
+Ein einjähriger Test der AAAS/Science-Pressestelle an 64 echten Studien hat
+dokumentiert, woran LLMs bei genau dieser Aufgabe scheitern. Diese Regeln setzen
+genau da an:
+
+1. KORRELATION IST KEINE KAUSALITÄT. Der häufigste und schwerwiegendste Fehler
+   im AAAS-Test war, dass Zusammenhänge stillschweigend zu Ursache-Wirkung wurden
+   (Beispiel aus dem Test: „X erhöht das Risiko für Y" statt korrekt „X ist mit
+   einem höheren Risiko für Y assoziiert"). Prüfe bei JEDER Formulierung, ob das
+   Studiendesign das hergibt. Design-Decke beachten:
+   - Korrelations-/Beobachtungsstudie, Querschnitt, Kohorte, Fall-Kontroll -> NIE
+     „verursacht", „führt zu", „weil"; NUR „ist assoziiert mit", „hängt zusammen mit".
+   - Auch Mendelian-Randomization- oder ähnliche Verfahren, die Kausalität
+     NAHELEGEN, bleiben statistische Annäherungen – nicht als bewiesene Kausalität
+     formulieren, sondern als „legt nahe, dass" kennzeichnen.
+   - Tiermodell/in-vitro -> nicht auf den Menschen übertragen.
+   - Modellierung/Simulation -> keine empirische Bestätigung behaupten.
+   - RCT/Interventionsstudie -> hier ist vorsichtige Kausalsprache zulässig, weil
+     das Design sie trägt.
+
+2. BEHAUPTUNGEN NICHT VERSCHÄRFEN. Übernimm die Reichweite einer Aussage exakt so,
+   wie das Material sie belegt – auch wenn eine stärkere Formulierung eingängiger
+   klingt. Dokumentierter Fehlerfall: aus „muss manuell neu zusammengesetzt werden"
+   wurde „kann schnell zwischen Formen wechseln" – das ist schlicht falsch. Prüfe
+   jede zugespitzte Formulierung gegen den Ausgangstext: Steht das wirklich so da,
+   oder klingt es nur besser?
+
+3. MECHANISMUS UND EINORDNUNG, NICHT NUR ETIKETT. Ein häufiger Kritikpunkt war,
+   dass Zusammenfassungen nur benennen, WAS gemacht wurde, aber nicht erklären,
+   WIE es funktioniert oder WARUM es die Lücke im Feld schließt. „methoden"/
+   „methoden_recap" und „engpass"/„fortschritt" müssen so konkret sein, dass eine
+   fachfremde Person versteht, was den Unterschied macht – nicht nur, dass es
+   einen gibt. „engpass" ist NIE ein generisches „weitere Forschung war nötig",
+   sondern die konkrete, im Material erkennbare Lücke.
+
+4. VERBOTENE HYPE-WÖRTER. Im AAAS-Test verschwand die Übertreibung nachweislich,
+   sobald bestimmte Wörter verboten wurden. Diese Wörter (und sinngemäße
+   Entsprechungen) sind gesperrt: „bahnbrechend", „wegweisend", „revolutionär",
+   „Durchbruch", „Meilenstein", „Sensation", „neuartig" (als bloßes Hype-Wort ohne
+   konkreten Beleg für die Neuheit), „enthüllt", „erstmals" (nur zulässig, wenn das
+   Material das tatsächlich so belegt – nicht als Standardfloskel).
+
+5. MEHRERE BEFUNDE NICHT AUF EINEN VERKÜRZEN. Wenn eine Studie mehrere zentrale
+   Ergebnisse berichtet (z. B. einen Zusammenhang UND einen gegenläufigen
+   Nebenbefund), muss die Kurzmeldung die Hierarchie widerspiegeln – nicht nur den
+   auffälligsten Befund herausgreifen und die anderen unterschlagen.
+
+6. ZEITHORIZONT EHRLICH BENENNEN. Unterscheide explizit zwischen Grundlagenforschung
+   ohne absehbare Anwendung und Ergebnissen mit klarem, nahem Anwendungsbezug.
+   Formulierungen wie „könnte künftig helfen" nur, wenn das Material dafür eine
+   Grundlage bietet – sonst offenlassen statt suggerieren.
+
+================================================================
 PHASE 1 – Das Gerüst (Bits 1 bis 4)
 ================================================================
 
@@ -20,24 +75,28 @@ Werbetext, Meinungsstück, Nachrichtenschnipsel oder leerer Text ist es NICHT.
 Wenn es KEINE Forschungsarbeit ist, antworte nur:
 { "ist_studie": false, "ablehnungsgrund": "kurz, warum das keine Studie ist" }
 
-Andernfalls beantworte die ersten vier Bits, streng am Material entlang:
+Andernfalls beantworte die ersten vier Bits, streng am Material entlang und unter
+Beachtung der Fehlerquellen-Regeln oben:
 
 {
   "ist_studie": true,
   "frage": "Bit 1 – die SEHR SPEZIFISCHE Frage, die diese Arbeit beantwortet. 1–2 Sätze, konkret, keine Allgemeinplätze.",
   "methoden": ["Bit 2 – nur die für die SCHLUSSFOLGERUNG entscheidenden Methoden, je Eintrag kurz. KEINE Validierungs-/Kontrollschritte auflisten."],
-  "methoden_recap": "Bit 2 in 1–2 Sätzen Fließtext, laienverständlich.",
-  "engpass": "Bit 3 – was das Feld bisher aufgehalten hat: die offene Frage, das fehlende Werkzeug, der Widerspruch. 1–3 Sätze.",
-  "fortschritt": "Bit 4 – wie GENAU diese Arbeit das Feld voranbringt. Kein Hype, keine Übertreibung. 1–3 Sätze."
+  "methoden_recap": "Bit 2 in 1–2 Sätzen Fließtext, laienverständlich – erklärt auch, WIE die Methode zur Antwort führt, nicht nur ihren Namen.",
+  "engpass": "Bit 3 – was das Feld bisher aufgehalten hat: die konkrete offene Frage, das fehlende Werkzeug, der Widerspruch. Kein generisches 'mehr Forschung nötig'. 1–3 Sätze.",
+  "fortschritt": "Bit 4 – wie GENAU diese Arbeit das Feld voranbringt UND wie diese Studie sich von naheliegenden Vorarbeiten unterscheidet. Kein Hype, keine Übertreibung, kein 'erstmals' ohne Beleg. 1–3 Sätze."
 }
 
 Regeln Phase 1:
 - „frage" ist spezifisch, nicht das Oberthema. Nicht „Wie wirkt Stress?", sondern
   „Verändert kurzzeitiger Hitzestress das Sammelverhalten von Honigbienen?".
 - „methoden": das Wesentliche, das die Aussage trägt. Validierungsschritte,
-  Robustheits-Checks, Standardkontrollen NICHT aufzählen.
+  Robustheits-Checks, Standardkontrollen NICHT aufzählen. Nenne bei mehreren
+  zentralen Ergebnissen alle, die für die Schlussfolgerung tragend sind (Regel 5).
 - „engpass" und „fortschritt" gehören zusammen: erst die Lücke, dann exakt der
   Beitrag, der sie (teilweise) schließt. Bleib bei dem, was das Material hergibt.
+- Studiendesign identifizieren (Regel 1) und im Kopf behalten – es bestimmt, welche
+  Sprache in Phase 2 zulässig ist.
 - Bei einem reinen Abstract: triff keine Aussagen über Details, die nicht darin
   stehen. Lieber knapper als spekulativ.
 
@@ -55,10 +114,14 @@ widersprich ihnen nicht.
   "kurzmeldung": "Die zusammengesetzte Kurzmeldung, ca. 90–150 Wörter: beginnt mit dem Aufmacher, nennt dann knapp Methode und Beitrag (Bits 2 + 4) und ordnet ein (Bit 3). Ein bis drei Absätze, durch \\n\\n getrennt. Sachlich, aktiv, ohne Werbesprech."
 }
 
-Regeln Phase 2:
-- Der Aufmacher darf zuspitzen, aber nie über die Bits hinausgehen. Aus einem
-  Zusammenhang wird keine Ursache; aus einem Tiermodell keine Aussage über den
-  Menschen; aus einer Modellierung keine empirische Gewissheit.
-- Keine Adjektive wie „bahnbrechend" oder „revolutionär", kein „Sensation".
+Regeln Phase 2 – vor der Ausgabe jede einzelne prüfen:
+- Der Aufmacher darf zuspitzen, aber nie über die Bits hinausgehen und nie die
+  Design-Decke aus Regel 1 durchbrechen (keine Kausalität aus Korrelation, keine
+  Übertragung von Tier/Modell auf den Menschen).
+- Prüfe „lede" UND „kurzmeldung" Satz für Satz gegen Regel 2 (nicht verschärft?)
+  und die Hype-Wörter-Liste aus Regel 4.
+- Wenn Bit 4 mehrere Befunde nennt (Regel 5), muss die Kurzmeldung den wichtigsten
+  zuerst bringen, darf die übrigen aber nicht unterschlagen.
+- Zeithorizont (Regel 6) nur benennen, wenn das Material dafür eine Grundlage bietet.
 - „kurzmeldung" ist eigenständig lesbar und in sich korrekt – sie ist der eigentliche
   Liefergegenstand, „lede" und „headline" sind ihre Bausteine.

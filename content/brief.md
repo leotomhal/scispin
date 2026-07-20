@@ -17,6 +17,10 @@ Wir bestimmen erst die Prämisse. Dann nehmen wir uns Methoden und Kontext vor. 
 
 Dieses Werkzeug bildet genau das ab: In der ersten Phase entsteht das Gerüst aus den Bits 1 bis 4. Erst danach – auf dieser Grundlage – schreibt es den Aufmacher und setzt die fertige Kurzmeldung zusammen. Die Reihenfolge ist nicht nur ein Hinweis im Text, sondern in zwei getrennten Schritten angelegt.
 
+## Worauf das Werkzeug besonders achtet
+
+Ein einjähriger Test der AAAS/*Science*-Pressestelle an 64 echten Studien hat dokumentiert, woran KI-Modelle bei genau dieser Aufgabe typischerweise scheitern – etwa daran, aus einem Zusammenhang eine Ursache zu machen, Aussagen beim Zuspitzen unbemerkt zu verschärfen oder Kontext und Mechanismus wegzulassen. Der Prompt dieses Werkzeugs setzt gezielt an diesen bekannten Fehlerquellen an: Er prüft das Studiendesign (Korrelation bleibt Korrelation), vergleicht zugespitzte Formulierungen gegen den Ausgangstext und verzichtet auf eine Liste erwiesenermaßen irreführender Hype-Wörter.
+
 ## Grenzen
 
 Die Kurzmeldung ist ein Entwurf, kein fertiger Pressetext und kein Ersatz für die redaktionelle Endabnahme. Sie stützt sich nur auf das eingegebene Material. Steht etwas nicht im Abstract, erfindet das Werkzeug es nicht – es benennt die Lücke lieber. Wer prüfen will, ob der eigene Aufmacher schon übertreibt, kann die fertige Meldung per Klick in den **SciSpin-O-Mat** übernehmen.
