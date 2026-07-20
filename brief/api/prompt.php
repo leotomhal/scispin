@@ -56,6 +56,53 @@ function brief_payload_phase2(string $text, array $bits, array $meta): string {
          . "<<<MATERIAL\n" . $text . "\nMATERIAL>>>";
 }
 
+/** Feste Werte für "evidenz"-Unterfelder, wenn das Material dazu nichts hergibt. */
+const BRIEF_UNBEKANNT = 'im Abstract nicht angegeben';
+
+/** Validiert/normalisiert das "evidenz"-Objekt aus Phase 1 (Punkt 8: Pflicht-Etikett). */
+function brief_validate_evidenz($e): array {
+    $e = is_array($e) ? $e : [];
+    $get = function (array $e, string $key): string {
+        $v = trim((string)($e[$key] ?? ''));
+        return $v !== '' ? $v : BRIEF_UNBEKANNT;
+    };
+    $population = $get($e, 'population');
+    $erlaubtePopulationen = ['Mensch', 'Tiermodell', 'Zellkultur/in-vitro', 'Computermodell/Simulation', BRIEF_UNBEKANNT];
+    if (!in_array($population, $erlaubtePopulationen, true)) $population = BRIEF_UNBEKANNT;
+
+    $preprint = strtolower($get($e, 'preprint'));
+    if (!in_array($preprint, ['ja', 'nein'], true)) $preprint = BRIEF_UNBEKANNT;
+
+    return [
+        'studientyp'         => $get($e, 'studientyp'),
+        'stichprobengroesse' => $get($e, 'stichprobengroesse'),
+        'population'         => $population,
+        'preprint'           => $preprint,
+    ];
+}
+
+/**
+ * Validiert/normalisiert "regel_hinweise" aus Phase 2 (Punkt 6: Regel-Eingriffe
+ * inline markieren). Nur strukturell vollständige Einträge behalten; ob "text"
+ * tatsächlich in "kurzmeldung" vorkommt, prüft und markiert das Frontend
+ * (whitespace-tolerant, wie schon bei den Änderungsmarkierungen im SciSpin-O-Mat).
+ */
+function brief_validate_regel_hinweise($liste): array {
+    $out = [];
+    foreach ((is_array($liste) ? $liste : []) as $h) {
+        if (!is_array($h)) continue;
+        $text = trim((string)($h['text'] ?? ''));
+        if ($text === '') continue;
+        $out[] = [
+            'text'    => $text,
+            'regel'   => (string)($h['regel'] ?? ''),
+            'hinweis' => (string)($h['hinweis'] ?? ''),
+        ];
+        if (count($out) >= 5) break;
+    }
+    return $out;
+}
+
 /**
  * Validiert die Modellantwort für eine Phase.
  * Wirft RuntimeException bei strukturellem Fehler (löst im Aufrufer den Retry aus).
@@ -63,9 +110,11 @@ function brief_payload_phase2(string $text, array $bits, array $meta): string {
  * Rückgabe Phase 1 – Ablehnung (nur hier erlaubt):
  *   ['ist_studie' => false, 'ablehnungsgrund' => string]
  * Rückgabe Phase 1 – Erfolg:
- *   ['ist_studie' => true, 'frage', 'methoden'[], 'methoden_recap', 'engpass', 'fortschritt']
+ *   ['ist_studie' => true, 'frage', 'methoden'[], 'methoden_recap', 'engpass',
+ *    'fortschritt', 'evidenz'{studientyp,stichprobengroesse,population,preprint},
+ *    'abstract_hype_warnung' (string|null)]
  * Rückgabe Phase 2:
- *   ['lede', 'headline', 'kurzmeldung']
+ *   ['lede', 'headline', 'kurzmeldung', 'regel_hinweise'[]]
  */
 function brief_validate(array $data, int $phase): array {
     if ($phase === 1) {
@@ -89,13 +138,17 @@ function brief_validate(array $data, int $phase): array {
             if ($m !== '') $methoden[] = $m;
         }
 
+        $hypeWarnung = trim((string)($data['abstract_hype_warnung'] ?? ''));
+
         return [
-            'ist_studie'     => true,
-            'frage'          => (string)$data['frage'],
-            'methoden'       => $methoden,
-            'methoden_recap' => (string)($data['methoden_recap'] ?? ''),
-            'engpass'        => (string)($data['engpass'] ?? ''),
-            'fortschritt'    => (string)($data['fortschritt'] ?? ''),
+            'ist_studie'             => true,
+            'frage'                  => (string)$data['frage'],
+            'methoden'               => $methoden,
+            'methoden_recap'         => (string)($data['methoden_recap'] ?? ''),
+            'engpass'                => (string)($data['engpass'] ?? ''),
+            'fortschritt'            => (string)($data['fortschritt'] ?? ''),
+            'evidenz'                => brief_validate_evidenz($data['evidenz'] ?? null),
+            'abstract_hype_warnung'  => $hypeWarnung !== '' && strtolower($hypeWarnung) !== 'null' ? $hypeWarnung : null,
         ];
     }
 
@@ -104,8 +157,9 @@ function brief_validate(array $data, int $phase): array {
         throw new RuntimeException('Phase 2 ohne Kurzmeldung (Bit 5).');
     }
     return [
-        'lede'        => (string)($data['lede'] ?? ''),
-        'headline'    => (string)($data['headline'] ?? ''),
-        'kurzmeldung' => (string)$data['kurzmeldung'],
+        'lede'           => (string)($data['lede'] ?? ''),
+        'headline'       => (string)($data['headline'] ?? ''),
+        'kurzmeldung'    => (string)$data['kurzmeldung'],
+        'regel_hinweise' => brief_validate_regel_hinweise($data['regel_hinweise'] ?? null),
     ];
 }

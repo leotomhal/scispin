@@ -101,6 +101,10 @@ Beantwortet: *Wie schreibe ich aus dieser Studie eine kurze, korrekte Meldung?* 
 
 Warum zuletzt? Erst Prämisse, Methoden und Kontext, dann der erste Satz: So versteht man die Studie richtig und verzerrt sie nicht schon im Aufmacher. Mehr dazu auf der Seite [Über die Kurzmeldung](brief/ueber.php).
 
+### Was du im Ergebnis siehst
+
+Dreispaltig: **Abstract → 5-Bits-Gerüst → fertige Meldung**, alle Stufen gleichzeitig sichtbar. Dazu ein **Evidenz-Etikett** (Studientyp, Stichprobengröße, Mensch/Tiermodell, Preprint-Status – oder ausdrücklich „im Abstract nicht angegeben"), markierte Stellen, an denen eine Vorsichts-Regel gegriffen hat, und ein **automatischer Studien-Check** zum Original-Abstract direkt neben der Meldung – ohne dass du selbst zum Studien-Check wechseln musst.
+
 ### Grenzen
 
 - Die Meldung stützt sich **nur auf das eingegebene Material**; Fehlendes wird benannt, nicht erfunden.

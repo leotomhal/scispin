@@ -8,13 +8,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="tip" id="tip"></div>
   <header class="hero">
     <div class="wrap">
       <p class="eyebrow">Wissenschaftskommunikation · Statische Vorschau</p>
       <h1>Erst das <span class="turn">Gerüst</span>,<br>dann der Aufmacher.</h1>
       <p class="lede">Aus einem Abstract wird eine kurze, sachliche Meldung im Stil einer AAAS-Kurzmeldung – entlang der fünf Fragen des „5 Bits Outline". Die entscheidenden ersten Sätze entstehen bewusst zuletzt.</p>
       <a class="more-link" href="ueber.php">Was ist das 5 Bits Outline? →</a>
-      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025.</p>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025 – inklusive automatischem Studien-Check und markierten Regel-Eingriffen.</p>
     </div>
   </header>
   <main class="wrap">
@@ -24,6 +25,7 @@
   <script src="demo_payload.js"></script>
   <script>
   const output = document.querySelector("#output");
+  const tip = document.querySelector("#tip");
   const BITS = [
     { key:"frage", num:"01", titel:"Die Frage" },
     { key:"methoden", num:"02", titel:"Die Methoden" },
@@ -31,24 +33,104 @@
     { key:"fortschritt", num:"04", titel:"Der Fortschritt" },
   ];
   function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-  function render(){
-    const b = window.SCISPIN_BRIEF_DEMO.phase1, p = window.SCISPIN_BRIEF_DEMO.phase2;
-    const cards = BITS.map(x=>{
+  function escRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+
+  function evidenzChips(e){
+    if(!e) return "";
+    const preprintLabel = e.preprint==="ja" ? "Preprint" : e.preprint==="nein" ? "kein Preprint" : "Preprint: "+e.preprint;
+    const items=[e.studientyp,e.stichprobengroesse,e.population,preprintLabel];
+    return `<div class="evidenz-etikett"><span class="evidenz-label">Evidenz-Etikett</span>
+      <div class="evidenz-chips">${items.map(i=>`<span class="chip">${esc(i)}</span>`).join("")}</div></div>`;
+  }
+  function hypeWarnung(w){
+    if(!w) return "";
+    return `<div class="hype-warnung">⚠ Schon das Original-Abstract wirbt: ${esc(w)}</div>`;
+  }
+  function geruestKarten(b){
+    return BITS.map(x=>{
       let body;
       if(x.key==="methoden"){
         body = `<ul class="bit-list">${(b.methoden||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul><p class="bit-recap">${esc(b.methoden_recap||"")}</p>`;
       } else { body = `<p>${esc(b[x.key]||"—")}</p>`; }
       return `<article class="bit-card"><header class="bit-head"><span class="bit-num">${x.num}</span><span class="bit-titel">${esc(x.titel)}</span></header><div class="bit-body">${body}</div></article>`;
     }).join("");
-    const absaetze = String(p.kurzmeldung||"").split(/\n{2,}/).map(s=>s.trim()).filter(Boolean).map(s=>`<p>${esc(s)}</p>`).join("");
+  }
+  function markiereRegeln(text, hinweise){
+    const treffer=[];
+    for(const h of hinweise){
+      if(!h.text) continue;
+      let idx=text.indexOf(h.text), len=h.text.length;
+      if(idx===-1){
+        const pat=h.text.trim().split(/\s+/).map(escRe).join("\\s+");
+        try{ const m=new RegExp(pat).exec(text); if(m){idx=m.index; len=m[0].length;} }catch(_){ }
+      }
+      if(idx!==-1) treffer.push({start:idx,end:idx+len,regel:h.regel||"",hinweis:h.hinweis||""});
+    }
+    treffer.sort((a,b)=>a.start-b.start||b.end-a.end);
+    const sauber=[]; let lastEnd=-1;
+    for(const t of treffer){ if(t.start>=lastEnd){ sauber.push(t); lastEnd=t.end; } }
+    if(!sauber.length) return esc(text);
+    let out=""; let pos=0;
+    for(const t of sauber){
+      out+=esc(text.slice(pos,t.start));
+      out+=`<mark class="regel-mark" data-tip="${esc(t.hinweis)}" data-type="${esc(t.regel)}">${esc(text.slice(t.start,t.end))}</mark>`;
+      pos=t.end;
+    }
+    out+=esc(text.slice(pos));
+    return out;
+  }
+  function studienCheckPanel(sc){
+    if(!sc) return `<div class="check-panel check-panel-empty"><span class="check-titel">Studien-Check zum Original</span><p>Nicht verfügbar.</p></div>`;
+    const ampel=sc.ampel||{}; const color=["gruen","gelb","rot","grau"].includes(ampel.color)?ampel.color:"grau";
+    const einschr=sc.einschraenkungen||[];
+    return `<div class="check-panel">
+      <div class="check-head"><span class="dot ${color}"></span><span class="check-titel">Studien-Check zum Original</span>${sc.study_type?`<span class="check-studientyp">${esc(sc.study_type)}</span>`:""}</div>
+      ${sc.core_statement?`<p class="check-core">${esc(sc.core_statement)}</p>`:""}
+      ${ampel.begruendung?`<p class="check-begruendung">${esc(ampel.begruendung)}</p>`:""}
+      ${einschr.length?`<ul class="check-einschraenkungen">${einschr.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`:""}
+      <a class="check-link" href="../check/">Volle Analyse im Studien-Check →</a>
+    </div>`;
+  }
+  function bindTips(){
+    document.querySelectorAll("[data-tip]").forEach(el=>{
+      el.tabIndex=0;
+      el.addEventListener("mouseenter",e=>show(e,el));
+      el.addEventListener("mousemove",pos);
+      el.addEventListener("mouseleave",hide);
+      el.addEventListener("focus",e=>show(e,el));
+      el.addEventListener("blur",hide);
+    });
+  }
+  function show(e,el){tip.innerHTML=(el.dataset.type?`<span class="tip-type">${esc(el.dataset.type)}</span>`:"")+esc(el.dataset.tip);tip.classList.add("show");pos(e);}
+  function pos(e){tip.style.left=Math.min((e.clientX||0)+14,innerWidth-320)+"px";tip.style.top=((e.clientY||0)+14)+"px";}
+  function hide(){tip.classList.remove("show");}
+
+  function render(){
+    const b = window.SCISPIN_BRIEF_DEMO.phase1, p = window.SCISPIN_BRIEF_DEMO.phase2;
+    const abstractDemo = "Junge Geflüchtete verbessern ihre Sprachkenntnisse in Deutschland am ehesten, wenn sie möglichst schnell in reguläre Schulklassen kommen. Das zeigt eine neue Studie von Forschenden der Martin-Luther-Universität Halle-Wittenberg, für die sie Daten von mehr als 1.000 Jugendlichen auswerteten. Die Analyse zeigt auch: Willkommensklassen scheinen unzureichende Deutschkenntnisse nicht wie erhofft ausgleichen zu können. Die Arbeit wurde im Fachmagazin Acta Sociologica veröffentlicht.";
+    const absaetze = String(p.kurzmeldung||"").split(/\n{2,}/).map(s=>s.trim()).filter(Boolean).map(s=>`<p>${markiereRegeln(s,p.regel_hinweise||[])}</p>`).join("");
     output.innerHTML = `
-      <div class="geruest">${cards}</div>
-      <article class="bit-card bit5"><header class="bit-head"><span class="bit-num">05</span><span class="bit-titel">Der Aufmacher</span><span class="bit-flag">zuletzt geschrieben</span></header>
-        <div class="bit-body">
-          <p class="lede-satz">${esc(p.lede)}</p>
-          <div class="kurzmeldung"><h3 class="km-head">${esc(p.headline)}</h3>${absaetze}</div>
-        </div>
-      </article>`;
+      <div class="dreispalten">
+        <section class="spalte spalte-abstract">
+          <h3 class="spalte-titel">Abstract</h3>
+          <div class="abstract-text">${esc(abstractDemo)}</div>
+          <p class="disclaimer">Basiert ausschließlich auf dem eingegebenen Abstract.</p>
+          ${evidenzChips(b.evidenz)}${hypeWarnung(b.abstract_hype_warnung)}
+        </section>
+        <section class="spalte spalte-geruest">${geruestKarten(b)}</section>
+        <section class="spalte spalte-meldung">
+          <article class="bit-card bit5">
+            <header class="bit-head"><span class="bit-num">05</span><span class="bit-titel">Der Aufmacher</span><span class="bit-flag">zuletzt geschrieben</span></header>
+            <div class="bit-body">
+              <p class="lede-satz">${esc(p.lede)}</p>
+              <div class="kurzmeldung"><h3 class="km-head">${esc(p.headline)}</h3>${absaetze}</div>
+              ${(p.regel_hinweise||[]).length?`<p class="regel-legende">Markierte Stellen: hier hat eine Vorsichts-Regel gegriffen – antippen für die Erklärung.</p>`:""}
+            </div>
+          </article>
+          ${studienCheckPanel(p.studien_check)}
+        </section>
+      </div>`;
+    bindTips();
   }
   render();
   </script>

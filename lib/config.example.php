@@ -40,7 +40,8 @@ return [
     // ==================== Gemeinsame Kostenbremse ====================
     // Zählt JEDEN Anthropic-Call über alle Modi. Achtung: eine vollständige
     // Spin-Analyse sind 7 Calls (eine pro Stufe), ein Studien-Check ist 1 Call,
-    // eine Kurzmeldung sind 2 Calls (Gerüst + Aufmacher).
+    // eine Kurzmeldung sind 3 Calls (Gerüst + Aufmacher + automatischer
+    // Studien-Check zum Original-Abstract, läuft innerhalb der Aufmacher-Anfrage).
     'daily_llm_cap'      => 500,    // globale Obergrenze aller LLM-Calls pro Tag
 
     // ==================== Modus "check" (Studien-Check) ====================
@@ -65,7 +66,7 @@ return [
     'demo_mode'          => false,
 
     // ==================== Modus "brief" (Kurzmeldung, 5 Bits Outline) ====================
-    'brief_rate_per_hour' => 40,    // Kurzmeldungs-Calls pro Besucher/Stunde (2 = 1 Meldung)
+    'brief_rate_per_hour' => 40,    // Kurzmeldungs-ANFRAGEN pro Besucher/Stunde (2 Anfragen = 1 Meldung; der dritte, automatische Call zählt nur gegen daily_llm_cap)
     'brief_max_tokens'    => 2500,  // max_tokens pro Phasen-Call
 
     // ==================== Self-Updater (tools/update.php) ====================

@@ -15,7 +15,8 @@ dem, was die Wissenschaft hergibt?**
 - **Kurzmeldung** (`brief/`) – *Sachlich melden.* Aus einem Abstract eine kurze
   Meldung im Stil einer AAAS-Kurzmeldung, entlang der fünf Fragen des „5 Bits
   Outline". Erst entsteht das Gerüst (Frage · Methoden · Engpass · Fortschritt),
-  dann – bewusst zuletzt – der Aufmacher. Zwei API-Calls pro Meldung.
+  dann – bewusst zuletzt – der Aufmacher; ein automatischer Studien-Check zum
+  Original-Abstract läuft direkt mit. Drei API-Calls pro Meldung.
 
 Plain PHP / MySQL, für klassisches Shared Hosting. Analyse-Aufrufe gehen an die
 Anthropic-API; alle Modi teilen sich einen API-Key, eine Datenbank und eine
@@ -160,12 +161,15 @@ ausgehenden Verkehr – dann beim Support klären, bevor du Zeit in Debugging st
 
 - `daily_llm_cap` – globale Obergrenze **aller** LLM-Calls pro Tag (Notbremse über
   alle Modi). **Achtung:** ein Studien-Check ist 1 Call, eine Kurzmeldung sind
-  **2** Calls (Gerüst + Aufmacher), eine vollständige Spin-Analyse sind **7** Calls
-  (eine pro Stufe).
+  **3** Calls (Gerüst + Aufmacher + automatischer Studien-Check zum Original,
+  siehe „Die Toolkette schließt sich" unten), eine vollständige Spin-Analyse sind
+  **7** Calls (eine pro Stufe).
 - `rate_per_ip_per_hour` / `rate_hits_per_hour` – Studien-Checks bzw. Cache-Treffer
   pro Besucher/Stunde.
 - `rate_per_hour` – Spin-Calls pro Besucher/Stunde (7 ≈ 1 Analyse).
-- `brief_rate_per_hour` – Kurzmeldungs-Calls pro Besucher/Stunde (2 ≈ 1 Meldung).
+- `brief_rate_per_hour` – Kurzmeldungs-**Anfragen** pro Besucher/Stunde (2 Anfragen
+  ≈ 1 Meldung – der dritte, automatische Call steckt in der zweiten Anfrage mit
+  drin und braucht kein eigenes Rate-Limit).
 - `max_abstract_chars` / `max_input_chars` – kappen die Eingabelänge.
 
 Das MySQL-Rate-Limit ist stundenbasiert und gröber als ein Token-Bucket – für den
@@ -184,10 +188,22 @@ nacheinander, ein API-Call pro Stufe (Stufe 0 zuerst als Themen-Gate). Ein klein
 Call pro Stufe ist robuster auf Shared Hosting als ein großer Call für alles.
 
 **Kurzmeldung** – Zwei-Phasen-Architektur nach dem 5 Bits Outline: Phase 1 baut das
-Gerüst (Bits 1–4 + Themen-Gate wie Stufe 0 im Spin), Phase 2 schreibt daraus – erst
-danach – den Aufmacher (Bit 5) und die zusammengesetzte Kurzmeldung. Die Regel
-„Lede zuletzt" ist so nicht nur im Prompt formuliert, sondern in zwei getrennten
-Calls angelegt. Ein Call pro Phase, gecacht je (Eingabe-Hash, Phase).
+Gerüst (Bits 1–4 + Themen-Gate wie Stufe 0 im Spin, plus Evidenz-Etikett und
+Hype-Warnung fürs Original-Abstract), Phase 2 schreibt daraus – erst danach – den
+Aufmacher (Bit 5), die zusammengesetzte Kurzmeldung und markierbare Regel-Hinweise
+(welche Vorsichts-Regel wo gegriffen hat). Die Regel „Lede zuletzt" ist so nicht
+nur im Prompt formuliert, sondern in zwei getrennten Calls angelegt.
+
+Die Toolkette schließt sich: Phase 2 löst serverseitig automatisch einen dritten
+Call aus, der das ORIGINAL-Abstract (nicht die eigene, bewusst jargonfreie
+Kurzmeldung) durch dieselbe Ampel-Bewertung schickt, die der Studien-Check nutzt
+(geteilte Funktionen aus `check/lib/analyze_llm.php`). Das Ergebnis erscheint
+automatisch neben der fertigen Meldung, ohne dass man selbst zum Studien-Check
+wechseln müsste. Schlägt dieser Zusatz-Call fehl oder ist das Tageskontingent
+erschöpft, bleibt die Kurzmeldung trotzdem gültig – der Selbstcheck ist ein Bonus,
+kein Blocker. Alles (Gerüst + Aufmacher + Selbstcheck) wird gemeinsam unter
+(Eingabe-Hash, Phase) gecacht – ein Cache-Treffer auf Phase 2 liefert den
+Studien-Check also ohne erneuten API-Call mit.
 
 ## Updates einspielen (Self-Updater)
 

@@ -1,7 +1,7 @@
 <p class="eyebrow">Über die Kurzmeldung</p>
 <h1>Erst das Gerüst,<br>dann der <span class="turn">Aufmacher</span>.</h1>
 
-Eine gute Kurzmeldung beginnt nicht mit dem ersten Satz. Sie beginnt mit dem Verstehen. Dieses Werkzeug arbeitet nach dem **5 Bits Outline** – einer Methode, wie sie die AAAS für ihre Kurzmeldungen nutzt.
+Eine gute Kurzmeldung beginnt nicht mit dem ersten Satz. Sie beginnt mit dem Verstehen. Dieses Werkzeug arbeitet nach dem **5 Bits Outline** – der Methode, mit der das [SciPak-Team der AAAS](https://www.science.org/content/blog-post/can-chatgpt-help-science-writers) seine Kurzmeldungen für die *Science*-Journalfamilie aufbaut.
 
 ## Die fünf Fragen
 
@@ -19,9 +19,19 @@ Dieses Werkzeug bildet genau das ab: In der ersten Phase entsteht das Gerüst au
 
 ## Worauf das Werkzeug besonders achtet
 
-Ein einjähriger Test der AAAS/*Science*-Pressestelle an 64 echten Studien hat dokumentiert, woran KI-Modelle bei genau dieser Aufgabe typischerweise scheitern – etwa daran, aus einem Zusammenhang eine Ursache zu machen, Aussagen beim Zuspitzen unbemerkt zu verschärfen oder Kontext und Mechanismus wegzulassen. Der Prompt dieses Werkzeugs setzt gezielt an diesen bekannten Fehlerquellen an: Er prüft das Studiendesign (Korrelation bleibt Korrelation), vergleicht zugespitzte Formulierungen gegen den Ausgangstext und verzichtet auf eine Liste erwiesenermaßen irreführender Hype-Wörter.
+Grundlage ist das Whitepaper [„ChatGPT Plus: Strengths and weaknesses in science writing"](https://www.science.org/do/10.5555/page.2385668/full/chatgpt_project_report_final.pdf) von Abigail Eisenstadt und Matthew Wright (AAAS/SciPak, 2024/2025): ein einjähriger Test an 64 echten *Science*-Papers, der dokumentiert, woran KI-Modelle bei genau dieser Aufgabe typischerweise scheitern – etwa daran, aus einem Zusammenhang eine Ursache zu machen, Aussagen beim Zuspitzen unbemerkt zu verschärfen oder Kontext und Mechanismus wegzulassen. Der Prompt dieses Werkzeugs setzt gezielt an diesen dort dokumentierten Fehlerquellen an: Er prüft das Studiendesign (Korrelation bleibt Korrelation), vergleicht zugespitzte Formulierungen gegen den Ausgangstext und verzichtet auf eine Liste erwiesenermaßen irreführender Hype-Wörter.
 
 Laienverständlichkeit gilt dabei nicht erst für die fertige Meldung, sondern für **jedes einzelne Bit**: Auch Frage, Engpass und Fortschritt entstehen bereits in Alltagssprache, mit aufgelösten Fachbegriffen und ausgeschriebenen Abkürzungen – sonst vererbt sich Fachjargon aus dem Gerüst unbemerkt in den Aufmacher.
+
+## Was die Ausgabe zeigt
+
+Die Ausgabe bleibt dreispaltig sichtbar, damit sich jede Stufe der Übersetzung nachvollziehen lässt: **Abstract → 5-Bits-Gerüst → fertige Meldung.**
+
+- **Evidenz-Etikett** – Studientyp, Stichprobengröße, Mensch/Tiermodell/Zellkultur und Preprint-Status als feste Angabe neben dem Abstract. Steht etwas davon nicht im Material, erscheint ausdrücklich „im Abstract nicht angegeben" statt einer geschätzten Zahl.
+- **Hype-Warnung fürs Original** – falls schon das eingefügte Abstract selbst werbliche Sprache verwendet, weist das Werkzeug eigens darauf hin. Das ist eine Beobachtung über die Quelle, keine Erlaubnis, dieses Vokabular zu übernehmen.
+- **Markierte Regel-Eingriffe** – Stellen in der Kurzmeldung, an denen eine der Vorsichts-Regeln (z. B. „Korrelation statt Kausalität") die Formulierung konkret beeinflusst hat, sind unterstrichen; antippen zeigt die Begründung.
+- **Automatischer Studien-Check** – jede fertige Kurzmeldung läuft ungefragt durch dieselbe Ampel-Bewertung wie im [Studien-Check](../check/), angewendet auf das Original-Abstract (nicht auf die eigene, bewusst jargonfreie Meldung). Das Ergebnis erscheint direkt daneben – ohne dass man selbst wechseln müsste.
+- **Fester Hinweis:** „Basiert ausschließlich auf dem eingegebenen Abstract." – bei jeder Meldung, nicht nur wenn etwas fehlt.
 
 ## Grenzen
 

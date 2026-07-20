@@ -106,7 +106,14 @@ Beachtung der Fehlerquellen-Regeln oben:
   "methoden": ["Bit 2 – nur die für die SCHLUSSFOLGERUNG entscheidenden Methoden, je Eintrag kurz und laienverständlich benannt (Regel 7). KEINE Validierungs-/Kontrollschritte auflisten."],
   "methoden_recap": "Bit 2 in 1–2 Sätzen Fließtext, laienverständlich (Regel 7) – erklärt auch, WIE die Methode zur Antwort führt, nicht nur ihren Namen.",
   "engpass": "Bit 3 – was das Feld bisher aufgehalten hat: die konkrete offene Frage, das fehlende Werkzeug, der Widerspruch. Kein generisches 'mehr Forschung nötig'. Laienverständlich (Regel 7). 1–3 Sätze.",
-  "fortschritt": "Bit 4 – wie GENAU diese Arbeit das Feld voranbringt UND wie diese Studie sich von naheliegenden Vorarbeiten unterscheidet. Kein Hype, keine Übertreibung, kein 'erstmals' ohne Beleg. Laienverständlich (Regel 7). 1–3 Sätze."
+  "fortschritt": "Bit 4 – wie GENAU diese Arbeit das Feld voranbringt UND wie diese Studie sich von naheliegenden Vorarbeiten unterscheidet. Kein Hype, keine Übertreibung, kein 'erstmals' ohne Beleg. Laienverständlich (Regel 7). 1–3 Sätze.",
+  "evidenz": {
+    "studientyp": "Kurzbezeichnung laienverständlich, z. B. 'Beobachtungsstudie/Kohorte', 'Randomisierte Studie (RCT)', 'Tierversuch', 'Computermodell'. Wenn nicht sicher bestimmbar: 'im Abstract nicht angegeben'.",
+    "stichprobengroesse": "Die Stichprobengröße GENAU wie im Material angegeben (z. B. 'n = 1.043' oder '160 Erkrankte, 140 Kontrollen'). Steht keine Zahl im Material: 'im Abstract nicht angegeben'. NICHT schätzen.",
+    "population": "GENAU EINER: 'Mensch' | 'Tiermodell' | 'Zellkultur/in-vitro' | 'Computermodell/Simulation' | 'im Abstract nicht angegeben'.",
+    "preprint": "'ja' | 'nein' | 'im Abstract nicht angegeben' – nur 'ja'/'nein', wenn das Material das explizit hergibt (z. B. Nennung eines Preprint-Servers oder eines Journals); sonst 'im Abstract nicht angegeben'."
+  },
+  "abstract_hype_warnung": "null, ODER ein Satz, der benennt, welches Hype-Vokabular (siehe Regel 4) SCHON IM ORIGINAL-MATERIAL steht (z. B. 'Das Original-Abstract selbst bezeichnet die Ergebnisse als \"groundbreaking\" und \"novel\".'). Wichtig: Das ist eine Beobachtung über die QUELLE, keine Rechtfertigung, dieses Vokabular zu übernehmen – Regel 4 gilt trotzdem uneingeschränkt für deine eigenen Bits und für Phase 2."
 }
 
 Regeln Phase 1:
@@ -118,9 +125,11 @@ Regeln Phase 1:
 - „engpass" und „fortschritt" gehören zusammen: erst die Lücke, dann exakt der
   Beitrag, der sie (teilweise) schließt. Bleib bei dem, was das Material hergibt.
 - Studiendesign identifizieren (Regel 1) und im Kopf behalten – es bestimmt, welche
-  Sprache in Phase 2 zulässig ist.
+  Sprache in Phase 2 zulässig ist. Das identifizierte Design ist zugleich die
+  Grundlage für "evidenz.studientyp" und "evidenz.population".
 - Bei einem reinen Abstract: triff keine Aussagen über Details, die nicht darin
-  stehen. Lieber knapper als spekulativ.
+  stehen. Lieber knapper als spekulativ. Für "evidenz" gilt das besonders strikt:
+  lieber "im Abstract nicht angegeben" als eine plausible Zahl/Angabe zu raten.
 - Vor der Ausgabe jedes Feld gegen Regel 7 prüfen: Kein Fachbegriff aus dem Abstract
   unübersetzt übernehmen, nur weil er kürzer oder präziser klingt.
 
@@ -135,15 +144,32 @@ widersprich ihnen nicht.
 {
   "lede": "Bit 5 – die kritischen ersten 1–3 Sätze, wie sie eine große Tageszeitung schreiben würde: konkret, anschaulich, aber gedeckt durch die Studie. Kein Sensations-Ton, keine Behauptung über das hinaus, was Bits 1–4 hergeben.",
   "headline": "Kurze, aktive Überschrift, max. ~90 Zeichen. Nicht reißerisch.",
-  "kurzmeldung": "Die zusammengesetzte Kurzmeldung, ca. 90–150 Wörter: beginnt mit dem Aufmacher, nennt dann knapp Methode und Beitrag (Bits 2 + 4) und ordnet ein (Bit 3). Ein bis drei Absätze, durch \\n\\n getrennt. Sachlich, aktiv, ohne Werbesprech."
+  "kurzmeldung": "Die zusammengesetzte Kurzmeldung, ca. 90–150 Wörter: beginnt mit dem Aufmacher, nennt dann knapp Methode und Beitrag (Bits 2 + 4) und ordnet ein (Bit 3). Ein bis drei Absätze, durch \\n\\n getrennt. Sachlich, aktiv, ohne Werbesprech.",
+  "regel_hinweise": [
+    {
+      "text": "die betroffene Textstelle GENAU UND WÖRTLICH wie sie in 'kurzmeldung' steht (kein Paraphrasieren, sonst kann sie nicht markiert werden)",
+      "regel": "kurzer Name der gegriffenen Regel, z. B. 'Korrelation statt Kausalität', 'Design-Decke Tiermodell', 'Zeithorizont', 'Hype-Wort ersetzt'",
+      "hinweis": "1 kurzer Satz: was an dieser Stelle bewusst vorsichtig/korrekt formuliert wurde und warum"
+    }
+  ]
 }
+
+Zu "regel_hinweise": Das ist eine Selbstauskunft, keine Pflichtübung. Trage NUR echte
+Fälle ein, an denen Regel 1, 2, 4 oder 6 die Formulierung tatsächlich konkret
+beeinflusst hat (z. B. bewusst "assoziiert" statt "verursacht" gewählt, weil
+Beobachtungsstudie; ein Hype-Wort aus dem Original-Abstract bewusst NICHT
+übernommen; ein Zeithorizont bewusst offengelassen). Wenn nichts davon zutrifft:
+leeres Array. Maximal 3 Einträge, die wichtigsten. "text" MUSS exakt und wörtlich
+als Teilstring in "kurzmeldung" vorkommen – sonst ist der Eintrag nutzlos, weil er
+im Ergebnis nicht markiert werden kann.
 
 Regeln Phase 2 – vor der Ausgabe jede einzelne prüfen:
 - Der Aufmacher darf zuspitzen, aber nie über die Bits hinausgehen und nie die
   Design-Decke aus Regel 1 durchbrechen (keine Kausalität aus Korrelation, keine
   Übertragung von Tier/Modell auf den Menschen).
 - Prüfe „lede" UND „kurzmeldung" Satz für Satz gegen Regel 2 (nicht verschärft?)
-  und die Hype-Wörter-Liste aus Regel 4.
+  und die Hype-Wörter-Liste aus Regel 4. Falls "abstract_hype_warnung" aus Phase 1
+  gesetzt war: sicherstellen, dass genau dieses Vokabular NICHT übernommen wurde.
 - Wenn Bit 4 mehrere Befunde nennt (Regel 5), muss die Kurzmeldung den wichtigsten
   zuerst bringen, darf die übrigen aber nicht unterschlagen.
 - Zeithorizont (Regel 6) nur benennen, wenn das Material dafür eine Grundlage bietet.

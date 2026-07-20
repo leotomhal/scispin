@@ -1,12 +1,17 @@
 // app.js – Kurzmeldung (5 Bits Outline). Zwei-Phasen-Architektur:
-//   Phase 1 holt das Gerüst (Bits 1–4) und das Themen-Gate.
-//   Phase 2 holt – erst danach – den Aufmacher (Bit 5) und die Kurzmeldung.
+//   Phase 1 holt das Gerüst (Bits 1–4), das Themen-Gate, das Evidenz-Etikett und
+//   eine Warnung, falls schon das Original-Abstract Hype-Vokabular enthält.
+//   Phase 2 holt – erst danach – den Aufmacher (Bit 5), die Kurzmeldung, die
+//   markierbaren Regel-Eingriffe und (automatisch, serverseitig) das Ergebnis
+//   des Studien-Checks zum Original-Material.
 // So entsteht die Lede strukturell ZULETZT, wie es die Methode vorschreibt.
+// Ausgabe ist dreispaltig: Abstract -> 5-Bits-Gerüst -> fertige Meldung.
 
 const $ = (s) => document.querySelector(s);
 const textarea = $("#eingabe");
 const startBtn = $("#start");
 const output   = $("#output");
+const tip      = $("#tip");
 
 // Brücke aus dem Studien-Check: dort übernommenen Text vorbefüllen.
 try {
@@ -57,7 +62,7 @@ async function starten() {
   const meta = metaLesen();
 
   startBtn.disabled = true;
-  output.innerHTML = `<p class="placeholder"><span class="spinner"></span>Das Gerüst wird gebaut (Bits 1–4) …</p>`;
+  renderGeruest3(t, meta, null); // Skelett: Abstract sofort sichtbar, Gerüst/Meldung laden
 
   try {
     // --- Phase 1: Gerüst ---
@@ -71,12 +76,11 @@ async function starten() {
       return;
     }
 
-    renderGeruest(bits);         // Bits 1–4 + Bit 5 als „wird zuletzt geschrieben"
+    renderGeruest3(t, meta, bits); // Abstract-Etikett + Gerüst füllen, Meldung noch ladend
 
-    // --- Phase 2: Aufmacher (erst jetzt) ---
-    setBit5Laden();
+    // --- Phase 2: Aufmacher + automatischer Studien-Check (erst jetzt) ---
     const brief = await holePhase({ text: t, phase: 2, bits, ...meta });
-    renderBit5(brief, meta);
+    renderMeldung(brief, meta);
 
   } catch (e) {
     output.innerHTML = `<p class="placeholder err">Fehler: ${escapeHtml(e.message)}</p>`;
@@ -92,8 +96,50 @@ const BITS = [
   { key: "fortschritt", num: "04", titel: "Der Fortschritt",      hint: "Wie bringt diese Arbeit das Feld voran?" },
 ];
 
-function renderGeruest(bits) {
-  const cards = BITS.map(b => {
+/** Baut das dreispaltige Grundgerüst. bits === null -> alles außer Abstract lädt noch. */
+function renderGeruest3(text, meta, bits) {
+  output.innerHTML = `
+    <div class="dreispalten">
+      <section class="spalte spalte-abstract" id="spalte-abstract">
+        ${spalteAbstract(text, bits)}
+      </section>
+      <section class="spalte spalte-geruest" id="spalte-geruest">
+        ${bits ? geruestKarten(bits) : `<p class="placeholder"><span class="spinner"></span>Gerüst wird gebaut (Bits 1–4) …</p>`}
+      </section>
+      <section class="spalte spalte-meldung" id="spalte-meldung">
+        <p class="placeholder">${bits ? '<span class="spinner"></span>Aufmacher, Kurzmeldung und Studien-Check werden erzeugt …' : 'Wartet auf das Gerüst …'}</p>
+      </section>
+    </div>`;
+  bindeTooltips();
+}
+
+function spalteAbstract(text, bits) {
+  return `
+    <h3 class="spalte-titel">Abstract</h3>
+    <div class="abstract-text">${escapeHtml(text)}</div>
+    <p class="disclaimer">Basiert ausschließlich auf dem eingegebenen Abstract.</p>
+    <div id="evidenz-slot">${bits ? evidenzChips(bits.evidenz) + hypeWarnung(bits.abstract_hype_warnung) : ''}</div>`;
+}
+
+function evidenzChips(evidenz) {
+  if (!evidenz) return '';
+  const preprintLabel = evidenz.preprint === 'ja' ? 'Preprint'
+    : evidenz.preprint === 'nein' ? 'kein Preprint'
+    : 'Preprint: ' + evidenz.preprint;
+  const items = [evidenz.studientyp, evidenz.stichprobengroesse, evidenz.population, preprintLabel];
+  return `<div class="evidenz-etikett">
+    <span class="evidenz-label">Evidenz-Etikett</span>
+    <div class="evidenz-chips">${items.map(i => `<span class="chip">${escapeHtml(i)}</span>`).join('')}</div>
+  </div>`;
+}
+
+function hypeWarnung(warnung) {
+  if (!warnung) return '';
+  return `<div class="hype-warnung">⚠ Schon das Original-Abstract wirbt: ${escapeHtml(warnung)}</div>`;
+}
+
+function geruestKarten(bits) {
+  return BITS.map(b => {
     let body;
     if (b.key === "methoden") {
       const list = (bits.methoden || []);
@@ -110,44 +156,39 @@ function renderGeruest(bits) {
       <div class="bit-body">${body}</div>
     </article>`;
   }).join("");
-
-  output.innerHTML = `
-    <div class="geruest">${cards}</div>
-    <article class="bit-card bit5" id="bit5">
-      <header class="bit-head"><span class="bit-num">05</span>
-        <span class="bit-titel">Der Aufmacher</span>
-        <span class="bit-flag">wird zuletzt geschrieben</span></header>
-      <div class="bit-body" id="bit5-body">
-        <p class="placeholder"><span class="spinner"></span>Gerüst steht – der Aufmacher entsteht jetzt.</p>
-      </div>
-    </article>`;
 }
 
-function setBit5Laden() {
-  const el = $("#bit5-body");
-  if (el) el.innerHTML = `<p class="placeholder"><span class="spinner"></span>Aufmacher und Kurzmeldung werden geschrieben …</p>`;
-}
+function renderMeldung(brief, meta) {
+  const spalte = $("#spalte-meldung");
+  if (!spalte) return;
 
-function renderBit5(brief, meta) {
-  const el = $("#bit5-body");
-  if (!el) return;
+  const hinweise = brief.regel_hinweise || [];
   const absaetze = String(brief.kurzmeldung || "")
     .split(/\n{2,}/).map(p => p.trim()).filter(Boolean)
-    .map(p => `<p>${escapeHtml(p)}</p>`).join("");
+    .map(p => `<p>${markiereRegeln(p, hinweise)}</p>`).join("");
 
   const beleg = studienbeleg(meta);
 
-  el.innerHTML = `
-    ${brief.lede ? `<p class="lede-satz">${escapeHtml(brief.lede)}</p>` : ""}
-    <div class="kurzmeldung">
-      ${brief.headline ? `<h3 class="km-head">${escapeHtml(brief.headline)}</h3>` : ""}
-      ${absaetze}
-      ${beleg ? `<p class="km-beleg">${beleg}</p>` : ""}
-    </div>
-    <div class="km-actions">
-      <button class="btn ghost" id="copy">Kurzmeldung kopieren</button>
-      <button class="btn ghost" id="tospin" title="Prüfen, ob der eigene Aufmacher übertreibt">In den SciSpin-O-Mat →</button>
-    </div>`;
+  spalte.innerHTML = `
+    <article class="bit-card bit5">
+      <header class="bit-head"><span class="bit-num">05</span>
+        <span class="bit-titel">Der Aufmacher</span>
+        <span class="bit-flag">zuletzt geschrieben</span></header>
+      <div class="bit-body">
+        ${brief.lede ? `<p class="lede-satz">${escapeHtml(brief.lede)}</p>` : ""}
+        <div class="kurzmeldung">
+          ${brief.headline ? `<h3 class="km-head">${escapeHtml(brief.headline)}</h3>` : ""}
+          ${absaetze}
+          ${beleg ? `<p class="km-beleg">${beleg}</p>` : ""}
+        </div>
+        ${hinweise.length ? `<p class="regel-legende">Markierte Stellen: hier hat eine Vorsichts-Regel gegriffen – antippen für die Erklärung.</p>` : ""}
+        <div class="km-actions">
+          <button class="btn ghost" id="copy">Kurzmeldung kopieren</button>
+          <button class="btn" id="tospin" title="Prüfen, ob der eigene Aufmacher übertreibt">In den SciSpin-O-Mat →</button>
+        </div>
+      </div>
+    </article>
+    ${studienCheckPanel(brief.studien_check)}`;
 
   const klartext = (brief.headline ? brief.headline + "\n\n" : "") + brief.kurzmeldung;
   $("#copy").addEventListener("click", async (ev) => {
@@ -159,6 +200,30 @@ function renderBit5(brief, meta) {
     try { sessionStorage.setItem("scispin_seed", brief.kurzmeldung); } catch (_) {}
     location.href = "../spin/";
   });
+  bindeTooltips();
+}
+
+function studienCheckPanel(sc) {
+  if (!sc) {
+    return `<div class="check-panel check-panel-empty">
+      <span class="check-titel">Studien-Check zum Original</span>
+      <p>Nicht verfügbar (z. B. Tageskontingent erreicht). Die Kurzmeldung bleibt davon unberührt.</p>
+    </div>`;
+  }
+  const ampel = sc.ampel || {};
+  const color = ["gruen", "gelb", "rot", "grau"].includes(ampel.color) ? ampel.color : "grau";
+  const einschr = sc.einschraenkungen || [];
+  return `<div class="check-panel">
+    <div class="check-head">
+      <span class="dot ${color}"></span>
+      <span class="check-titel">Studien-Check zum Original</span>
+      ${sc.study_type ? `<span class="check-studientyp">${escapeHtml(sc.study_type)}</span>` : ""}
+    </div>
+    ${sc.core_statement ? `<p class="check-core">${escapeHtml(sc.core_statement)}</p>` : ""}
+    ${ampel.begruendung ? `<p class="check-begruendung">${escapeHtml(ampel.begruendung)}</p>` : ""}
+    ${einschr.length ? `<ul class="check-einschraenkungen">${einschr.map(e => `<li>${escapeHtml(e)}</li>`).join("")}</ul>` : ""}
+    <a class="check-link" href="../check/">Volle Analyse im Studien-Check →</a>
+  </div>`;
 }
 
 function studienbeleg(meta) {
@@ -169,6 +234,63 @@ function studienbeleg(meta) {
   return teile.length ? "Studie: " + teile.join(", ") : "";
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// Markiert Textstellen in "text", an denen laut "hinweise" eine Vorsichts-Regel
+// gegriffen hat. Sucht erst exakt, dann whitespace-tolerant (wie die Änderungs-
+// markierungen im SciSpin-O-Mat) – findet sich keine Stelle, wird der Hinweis
+// still übergangen statt die Anzeige zu brechen.
+function markiereRegeln(text, hinweise) {
+  const treffer = [];
+  for (const h of hinweise) {
+    if (!h.text) continue;
+    let idx = text.indexOf(h.text);
+    let len = h.text.length;
+    if (idx === -1) {
+      const pat = h.text.trim().split(/\s+/).map(escapeRegExp).join("\\s+");
+      try {
+        const m = new RegExp(pat).exec(text);
+        if (m) { idx = m.index; len = m[0].length; }
+      } catch (_) { /* ungültiges Muster: überspringen */ }
+    }
+    if (idx !== -1) treffer.push({ start: idx, end: idx + len, regel: h.regel || "", hinweis: h.hinweis || "" });
+  }
+  treffer.sort((a, b) => a.start - b.start || b.end - a.end);
+  const sauber = []; let lastEnd = -1;
+  for (const t of treffer) { if (t.start >= lastEnd) { sauber.push(t); lastEnd = t.end; } }
+  if (!sauber.length) return escapeHtml(text);
+
+  let out = ""; let pos = 0;
+  for (const t of sauber) {
+    out += escapeHtml(text.slice(pos, t.start));
+    out += `<mark class="regel-mark" data-tip="${escapeAttr(t.hinweis)}" data-type="${escapeAttr(t.regel)}">${escapeHtml(text.slice(t.start, t.end))}</mark>`;
+    pos = t.end;
+  }
+  out += escapeHtml(text.slice(pos));
+  return out;
 }
+
+function bindeTooltips() {
+  document.querySelectorAll("[data-tip]").forEach(el => {
+    el.tabIndex = 0;
+    el.addEventListener("mouseenter", e => zeigeTip(e, el));
+    el.addEventListener("mousemove", positioniereTip);
+    el.addEventListener("mouseleave", versteckeTip);
+    el.addEventListener("focus", e => zeigeTip(e, el));
+    el.addEventListener("blur", versteckeTip);
+  });
+}
+function zeigeTip(e, el) {
+  const typ = el.dataset.type ? `<span class="tip-type">${escapeHtml(el.dataset.type)}</span>` : "";
+  tip.innerHTML = typ + escapeHtml(el.dataset.tip);
+  tip.classList.add("show");
+  positioniereTip(e);
+}
+function positioniereTip(e) {
+  const x = (e.clientX || 0) + 14, y = (e.clientY || 0) + 14;
+  tip.style.left = Math.min(x, window.innerWidth - 320) + "px";
+  tip.style.top = y + "px";
+}
+function versteckeTip() { tip.classList.remove("show"); }
+
+function escapeRegExp(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function escapeAttr(s) { return escapeHtml(s); }
