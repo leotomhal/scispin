@@ -21,6 +21,8 @@ Dieses Werkzeug bildet genau das ab: In der ersten Phase entsteht das Gerüst au
 
 Ein einjähriger Test der AAAS/*Science*-Pressestelle an 64 echten Studien hat dokumentiert, woran KI-Modelle bei genau dieser Aufgabe typischerweise scheitern – etwa daran, aus einem Zusammenhang eine Ursache zu machen, Aussagen beim Zuspitzen unbemerkt zu verschärfen oder Kontext und Mechanismus wegzulassen. Der Prompt dieses Werkzeugs setzt gezielt an diesen bekannten Fehlerquellen an: Er prüft das Studiendesign (Korrelation bleibt Korrelation), vergleicht zugespitzte Formulierungen gegen den Ausgangstext und verzichtet auf eine Liste erwiesenermaßen irreführender Hype-Wörter.
 
+Laienverständlichkeit gilt dabei nicht erst für die fertige Meldung, sondern für **jedes einzelne Bit**: Auch Frage, Engpass und Fortschritt entstehen bereits in Alltagssprache, mit aufgelösten Fachbegriffen und ausgeschriebenen Abkürzungen – sonst vererbt sich Fachjargon aus dem Gerüst unbemerkt in den Aufmacher.
+
 ## Grenzen
 
 Die Kurzmeldung ist ein Entwurf, kein fertiger Pressetext und kein Ersatz für die redaktionelle Endabnahme. Sie stützt sich nur auf das eingegebene Material. Steht etwas nicht im Abstract, erfindet das Werkzeug es nicht – es benennt die Lücke lieber. Wer prüfen will, ob der eigene Aufmacher schon übertreibt, kann die fertige Meldung per Klick in den **SciSpin-O-Mat** übernehmen.
