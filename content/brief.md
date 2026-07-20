@@ -30,12 +30,11 @@ Die Ausgabe bleibt dreispaltig sichtbar, damit sich jede Stufe der Übersetzung 
 - **Evidenz-Etikett** – Studientyp, Stichprobengröße, Mensch/Tiermodell/Zellkultur und Preprint-Status als feste Angabe neben dem Abstract. Steht etwas davon nicht im Material, erscheint ausdrücklich „im Abstract nicht angegeben" statt einer geschätzten Zahl.
 - **Hype-Warnung fürs Original** – falls schon das eingefügte Abstract selbst werbliche Sprache verwendet, weist das Werkzeug eigens darauf hin. Das ist eine Beobachtung über die Quelle, keine Erlaubnis, dieses Vokabular zu übernehmen.
 - **Markierte Regel-Eingriffe** – Stellen in der Kurzmeldung, an denen eine der Vorsichts-Regeln (z. B. „Korrelation statt Kausalität") die Formulierung konkret beeinflusst hat, sind unterstrichen; antippen zeigt die Begründung.
-- **Automatischer Studien-Check** – jede fertige Kurzmeldung läuft ungefragt durch dieselbe Ampel-Bewertung wie im [Studien-Check](../check/), angewendet auf das Original-Abstract (nicht auf die eigene, bewusst jargonfreie Meldung). Das Ergebnis erscheint direkt daneben – ohne dass man selbst wechseln müsste.
 - **Fester Hinweis:** „Basiert ausschließlich auf dem eingegebenen Abstract." – bei jeder Meldung, nicht nur wenn etwas fehlt.
 
 ## Grenzen
 
-Die Kurzmeldung ist ein Entwurf, kein fertiger Pressetext und kein Ersatz für die redaktionelle Endabnahme. Sie stützt sich nur auf das eingegebene Material. Steht etwas nicht im Abstract, erfindet das Werkzeug es nicht – es benennt die Lücke lieber. Wer prüfen will, ob der eigene Aufmacher schon übertreibt, kann die fertige Meldung per Klick in den **SciSpin-O-Mat** übernehmen.
+Die Kurzmeldung ist ein Entwurf, kein fertiger Pressetext und kein Ersatz für die redaktionelle Endabnahme. Sie stützt sich nur auf das eingegebene Material. Steht etwas nicht im Abstract, erfindet das Werkzeug es nicht – es benennt die Lücke lieber. Wer prüfen will, wie tragfähig die zugrunde liegende Studie selbst ist, oder ob der eigene Aufmacher schon übertreibt, kann direkt zum [Studien-Check](../check/) oder per Klick in den **SciSpin-O-Mat** wechseln.
 
 Ein Projekt von *Tom Leonhardt*
 

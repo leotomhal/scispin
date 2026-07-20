@@ -15,7 +15,7 @@
       <h1>Erst das <span class="turn">Gerüst</span>,<br>dann der Aufmacher.</h1>
       <p class="lede">Aus einem Abstract wird eine kurze, sachliche Meldung im Stil einer AAAS-Kurzmeldung – entlang der fünf Fragen des „5 Bits Outline". Die entscheidenden ersten Sätze entstehen bewusst zuletzt.</p>
       <a class="more-link" href="ueber.php">Was ist das 5 Bits Outline? →</a>
-      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025 – inklusive automatischem Studien-Check und markierten Regel-Eingriffen.</p>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025 – inklusive Evidenz-Etikett und markierten Regel-Eingriffen.</p>
     </div>
   </header>
   <main class="wrap">
@@ -79,18 +79,6 @@
     out+=esc(text.slice(pos));
     return out;
   }
-  function studienCheckPanel(sc){
-    if(!sc) return `<div class="check-panel check-panel-empty"><span class="check-titel">Studien-Check zum Original</span><p>Nicht verfügbar.</p></div>`;
-    const ampel=sc.ampel||{}; const color=["gruen","gelb","rot","grau"].includes(ampel.color)?ampel.color:"grau";
-    const einschr=sc.einschraenkungen||[];
-    return `<div class="check-panel">
-      <div class="check-head"><span class="dot ${color}"></span><span class="check-titel">Studien-Check zum Original</span>${sc.study_type?`<span class="check-studientyp">${esc(sc.study_type)}</span>`:""}</div>
-      ${sc.core_statement?`<p class="check-core">${esc(sc.core_statement)}</p>`:""}
-      ${ampel.begruendung?`<p class="check-begruendung">${esc(ampel.begruendung)}</p>`:""}
-      ${einschr.length?`<ul class="check-einschraenkungen">${einschr.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`:""}
-      <a class="check-link" href="../check/">Volle Analyse im Studien-Check →</a>
-    </div>`;
-  }
   function bindTips(){
     document.querySelectorAll("[data-tip]").forEach(el=>{
       el.tabIndex=0;
@@ -127,7 +115,6 @@
               ${(p.regel_hinweise||[]).length?`<p class="regel-legende">Markierte Stellen: hier hat eine Vorsichts-Regel gegriffen – antippen für die Erklärung.</p>`:""}
             </div>
           </article>
-          ${studienCheckPanel(p.studien_check)}
         </section>
       </div>`;
     bindTips();

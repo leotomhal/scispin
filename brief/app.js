@@ -185,10 +185,10 @@ function renderMeldung(brief, meta) {
         <div class="km-actions">
           <button class="btn ghost" id="copy">Kurzmeldung kopieren</button>
           <button class="btn" id="tospin" title="Prüfen, ob der eigene Aufmacher übertreibt">In den SciSpin-O-Mat →</button>
+          <a class="btn ghost" href="../check/">Im Studien-Check prüfen →</a>
         </div>
       </div>
-    </article>
-    ${studienCheckPanel(brief.studien_check)}`;
+    </article>`;
 
   const klartext = (brief.headline ? brief.headline + "\n\n" : "") + brief.kurzmeldung;
   $("#copy").addEventListener("click", async (ev) => {
@@ -201,29 +201,6 @@ function renderMeldung(brief, meta) {
     location.href = "../spin/";
   });
   bindeTooltips();
-}
-
-function studienCheckPanel(sc) {
-  if (!sc) {
-    return `<div class="check-panel check-panel-empty">
-      <span class="check-titel">Studien-Check zum Original</span>
-      <p>Nicht verfügbar (z. B. Tageskontingent erreicht). Die Kurzmeldung bleibt davon unberührt.</p>
-    </div>`;
-  }
-  const ampel = sc.ampel || {};
-  const color = ["gruen", "gelb", "rot", "grau"].includes(ampel.color) ? ampel.color : "grau";
-  const einschr = sc.einschraenkungen || [];
-  return `<div class="check-panel">
-    <div class="check-head">
-      <span class="dot ${color}"></span>
-      <span class="check-titel">Studien-Check zum Original</span>
-      ${sc.study_type ? `<span class="check-studientyp">${escapeHtml(sc.study_type)}</span>` : ""}
-    </div>
-    ${sc.core_statement ? `<p class="check-core">${escapeHtml(sc.core_statement)}</p>` : ""}
-    ${ampel.begruendung ? `<p class="check-begruendung">${escapeHtml(ampel.begruendung)}</p>` : ""}
-    ${einschr.length ? `<ul class="check-einschraenkungen">${einschr.map(e => `<li>${escapeHtml(e)}</li>`).join("")}</ul>` : ""}
-    <a class="check-link" href="../check/">Volle Analyse im Studien-Check →</a>
-  </div>`;
 }
 
 function studienbeleg(meta) {

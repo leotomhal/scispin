@@ -8,7 +8,7 @@
 :root{
   --bg:#f4f6fb; --bg2:#eef1f8; --panel:#ffffff; --panel2:#f7f9fd;
   --line:#dce1ec; --ink:#1a2030; --ink-soft:#566076; --ink-dim:#8b94a8;
-  --cold:#1593a8; --good:#1f9d5c; --hot:#e0492a; --accent:#3b5bdb; --gelb:#f9a825; --grau:#9e9e9e;
+  --cold:#1593a8; --good:#1f9d5c; --hot:#e0492a; --accent:#3b5bdb;
   --mark:#fdecdf; --mark-line:var(--hot);
   --radius:10px; --shadow:0 1px 3px rgba(26,32,48,.08), 0 12px 32px rgba(26,32,48,.10);
 }
@@ -123,26 +123,6 @@ textarea:focus,input:focus{ outline:2px solid var(--accent); outline-offset:1px;
   padding:1px 2px; border-radius:3px; cursor:help; }
 .regel-legende{ margin-top:10px; font-size:12px; color:var(--ink-dim); font-family:'JetBrains Mono',monospace; }
 
-/* Automatischer Studien-Check zum Original */
-.check-panel{ margin-top:16px; background:var(--panel); border:1px solid var(--line);
-  border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); }
-.check-panel-empty{ color:var(--ink-dim); font-size:13px; }
-.check-panel-empty p{ margin:6px 0 0; }
-.check-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
-.check-titel{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em;
-  text-transform:uppercase; color:var(--ink-dim); }
-.check-studientyp{ margin-left:auto; font-size:11px; background:var(--bg2); border-radius:20px;
-  padding:2px 9px; color:var(--ink-soft); }
-.check-core{ font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin:0 0 8px; }
-.check-begruendung{ font-size:13.5px; color:var(--ink-soft); margin:0 0 8px; }
-.check-einschraenkungen{ margin:0 0 10px; padding-left:18px; font-size:13px; color:var(--ink-soft); }
-.check-link{ font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:none;
-  border-bottom:1px solid currentColor; padding-bottom:1px; }
-
-.dot{ width:.8rem; height:.8rem; border-radius:50%; display:inline-block; flex:none; }
-.dot.gruen{ background:var(--good); } .dot.gelb{ background:var(--gelb); }
-.dot.rot{ background:var(--hot); }    .dot.grau{ background:var(--grau); }
-
 .bit-card.reject{ border-color:var(--hot); }
 
 .placeholder{ color:var(--ink-dim); font-size:15px; padding:32px 0; text-align:center; }
@@ -165,7 +145,6 @@ footer{ border-top:1px solid var(--line); padding:26px 0 52px; font-family:'JetB
 @media (max-width:960px){
   .dreispalten{ grid-template-columns:1fr; }
   .abstract-text{ max-height:260px; }
-  .check-studientyp{ margin-left:0; }
 }
 @media (max-width:640px){
   .meta-grid{ grid-template-columns:1fr; }

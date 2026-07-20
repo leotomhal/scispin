@@ -4,19 +4,20 @@
  * POST { text: string, phase: 1|2, titel?, journal?, doi?, bits?: object }
  *   phase 1 → Gerüst: Bits 1–4 (oder Ablehnung, wenn keine Studie)
  *   phase 2 → Aufmacher: Lede + Headline + Kurzmeldung (braucht `bits` aus Phase 1)
- *             löst danach AUTOMATISCH einen Studien-Check-Lauf auf dem
- *             Original-Material aus (Selbstcheck, kein Extra-Request nötig).
  *
  * Antwort:
  *   Phase 1 Erfolg:   { ok:true, cached:bool, ist_studie:true, frage, methoden[],
  *                        methoden_recap, engpass, fortschritt, evidenz{...},
  *                        abstract_hype_warnung }
  *   Phase 1 Ablehnung:{ ok:true, cached:false, ist_studie:false, ablehnungsgrund }
- *   Phase 2:          { ok:true, cached:bool, lede, headline, kurzmeldung,
- *                        regel_hinweise[], studien_check{ampel,core_statement,...}|null }
+ *   Phase 2:          { ok:true, cached:bool, lede, headline, kurzmeldung, regel_hinweise[] }
  *   Fehler:           HTTP 4xx/5xx + { ok:false, error } (+ wo/typ im Debug)
  *
- * Aufbau bewusst parallel zu spin/api/generate.php gehalten.
+ * Bewusst EIN Anthropic-Call pro HTTP-Request (wie spin/api/generate.php) – ein
+ * früherer automatischer Studien-Check-Call innerhalb von Phase 2 wurde wieder
+ * entfernt, weil zwei Calls in einer Anfrage auf manchen Shared-Hosting-Umgebungen
+ * das Gateway-Timeout reißen können. Wer die Ampel-Bewertung will, verlinkt das
+ * Frontend stattdessen einfach zum eigenständigen Studien-Check (kein Extra-Call).
  */
 
 declare(strict_types=1);
@@ -68,9 +69,6 @@ try {
     require_once __DIR__ . '/../../lib/db.php';
     require_once __DIR__ . '/../../lib/llm.php';
     require __DIR__ . '/prompt.php';
-    // Für die automatische Studien-Check-Stufe nach Phase 2 (Ampel auf dem
-    // Original-Material) – teilt sich den Low-Level-Call aus lib/llm.php.
-    require_once __DIR__ . '/../../check/lib/analyze_llm.php';
 } catch (Throwable $e) {
     fail(500, 'Konfiguration konnte nicht geladen werden.', $e);
 }
@@ -161,15 +159,6 @@ try {
         exit;
     }
 
-    // Automatische Endstufe (Punkt 3): jede fertige Kurzmeldung läuft ungefragt
-    // durch den Studien-Check auf dem ORIGINAL-Material – nicht auf der eigenen
-    // Kurzmeldung, die bewusst jargonfrei ist und daher ein schlechter Check-Input
-    // wäre. Schlägt der Zusatz-Call fehl oder ist das Tageskontingent aufgebraucht,
-    // bleibt die Kurzmeldung trotzdem gültig; "studien_check" wird dann null.
-    if ($phase === 2) {
-        $result['studien_check'] = brief_run_studien_check($config, $pdo, $text, $meta);
-    }
-
     // Cachen
     $ins = $pdo->prepare('INSERT INTO brief_cache (input_hash, phase, payload) VALUES (?, ?, ?)
                           ON DUPLICATE KEY UPDATE payload = VALUES(payload)');
@@ -226,36 +215,4 @@ function call_anthropic_phase(array $config, string $text, int $phase, array $me
     }
 
     throw new ApiException('Modell lieferte kein gültiges JSON (auch nach Retry).');
-}
-
-/**
- * Automatische dritte Stufe: das Original-Material (Abstract + Metadaten) durch
- * dieselbe Ampel-Bewertung schicken, die auch der Studien-Check nutzt
- * (check/lib/analyze_llm.php – geteilte Funktionen sc_llm_analyze/sc_system_prompt).
- * Bewusst NICHT die generierte Kurzmeldung selbst prüfen: die ist per Regel 7
- * absichtlich jargonfrei und liefert der Ampel-Bewertung keine verlässlichen
- * Methodik-Signale (Studientyp, Kontrollgruppe etc.) – das Original-Abstract schon.
- * Gibt bei Fehler/Kontingent-Ende still null zurück, statt die Kurzmeldung zu blockieren.
- */
-function brief_run_studien_check(array $config, PDO $pdo, string $text, array $meta): ?array {
-    if (!sc_daily_cap_ok($pdo, (int)($config['daily_llm_cap'] ?? 500))) {
-        return null;
-    }
-    $ex = [
-        'title'      => $meta['titel']   ?: '',
-        'journal'    => $meta['journal'] ?: '',
-        'abstract'   => $text,
-        'datenbasis' => 'abstract',
-    ];
-    $llm = sc_llm_analyze($config, $ex);
-    if (!$llm['ok'] || !is_array($llm['data'])) return null;
-
-    $d = $llm['data'];
-    return [
-        'ampel'                    => $d['ampel'] ?? null,
-        'core_statement'           => $d['core_statement'] ?? null,
-        'methode_aussage_abgleich' => $d['methode_aussage_abgleich'] ?? null,
-        'einschraenkungen'         => $d['einschraenkungen'] ?? [],
-        'study_type'               => $d['methodik_klartext']['study_type'] ?? null,
-    ];
 }

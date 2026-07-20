@@ -103,7 +103,7 @@ Warum zuletzt? Erst Prämisse, Methoden und Kontext, dann der erste Satz: So ver
 
 ### Was du im Ergebnis siehst
 
-Dreispaltig: **Abstract → 5-Bits-Gerüst → fertige Meldung**, alle Stufen gleichzeitig sichtbar. Dazu ein **Evidenz-Etikett** (Studientyp, Stichprobengröße, Mensch/Tiermodell, Preprint-Status – oder ausdrücklich „im Abstract nicht angegeben"), markierte Stellen, an denen eine Vorsichts-Regel gegriffen hat, und ein **automatischer Studien-Check** zum Original-Abstract direkt neben der Meldung – ohne dass du selbst zum Studien-Check wechseln musst.
+Dreispaltig: **Abstract → 5-Bits-Gerüst → fertige Meldung**, alle Stufen gleichzeitig sichtbar. Dazu ein **Evidenz-Etikett** (Studientyp, Stichprobengröße, Mensch/Tiermodell, Preprint-Status – oder ausdrücklich „im Abstract nicht angegeben") und markierte Stellen, an denen eine Vorsichts-Regel gegriffen hat. Ein Link führt direkt zum [Studien-Check](check/), falls du die zugrunde liegende Studie zusätzlich prüfen willst.
 
 ### Grenzen
 

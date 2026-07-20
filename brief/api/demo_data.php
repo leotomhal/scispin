@@ -1,7 +1,7 @@
 <?php
 // demo_data.php – statische 2-Phasen-Beispielausgabe (Willkommensklassen, MLU 093/2025).
 // Format identisch zur Echtbetrieb-Ausgabe: je ein Objekt pro Phase, inklusive
-// Evidenz-Etikett, automatischem Studien-Check und markierbaren Regel-Hinweisen.
+// Evidenz-Etikett und markierbaren Regel-Hinweisen.
 
 return [
   'phase1' => [
@@ -37,19 +37,6 @@ return [
         'regel'   => 'Behauptung nicht verschärft',
         'hinweis' => "Bewusst zurückhaltend formuliert, nicht als 'nutzlos' oder 'wirkungslos' – das würde über den Befund hinausgehen.",
       ],
-    ],
-    'studien_check' => [
-      'ampel' => [
-        'color'       => 'gelb',
-        'begruendung' => 'Beobachtungsstudie ohne zufällige Zuteilung zu den Beschulungsformen – der Zusammenhang ist gut belegt, aber es ist keine kontrollierte Studie, die Ursache und Wirkung sauber trennen könnte.',
-      ],
-      'core_statement'           => 'Frühe Integration in den Regelunterricht hängt mit besserem Deutscherwerb zusammen als der Besuch separater Willkommensklassen.',
-      'methode_aussage_abgleich' => 'Die Kohortendaten zeigen einen klaren Zusammenhang zwischen Beschulungsform und Sprachfortschritt, doch ohne zufällige Zuteilung zu den Gruppen bleibt offen, ob andere Faktoren (z. B. Vorkenntnisse, Schulwahl der Familien) mit hineinspielen.',
-      'einschraenkungen'         => [
-        'Keine randomisierte Zuteilung zu den Beschulungsformen',
-        'Mögliche Selektionseffekte bei der Klassenwahl nicht ausgeschlossen',
-      ],
-      'study_type' => 'Kohortenstudie',
     ],
   ],
 ];
