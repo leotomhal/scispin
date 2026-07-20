@@ -2,7 +2,7 @@
    ein, damit check/ und spin/ als EIN Produkt wirken. Jede Seite setzt vorher
    window.SCISPIN = { root: '<pfad-zur-wurzel>', active: '<seiten-key>' }.
    root ist der relative Pfad zur Projektwurzel ('' auf der Startseite,
-   '../' in den Unterordnern). active ∈ home|check|spin|archiv|methoden. */
+   '../' in den Unterordnern). active ∈ home|check|spin|brief|archiv|methoden. */
 (function () {
   var cfg = window.SCISPIN || {};
   var root = cfg.root || '';
@@ -12,6 +12,7 @@
   var links = [
     ['check',    'Prüfen',          'check/'],
     ['spin',     'Vorführen',       'spin/'],
+    ['brief',    'Kurzmeldung',     'brief/'],
     ['hilfe',    'So funktioniert\'s', 'so-funktionierts.php'],
     ['archiv',   'Archiv',          'check/archive.php'],
     ['methoden', 'Methoden',        'methoden.php'],

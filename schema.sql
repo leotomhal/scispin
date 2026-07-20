@@ -60,3 +60,15 @@ CREATE TABLE IF NOT EXISTS spin_cache (
   erstellt_am  TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (input_hash, stufe)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ==================== Modus "brief" (Kurzmeldung, 5 Bits Outline) ====================
+
+-- Ergebnis-Cache: eine Zeile pro (Eingabe-Hash, Phase).
+-- phase 1 = Gerüst (Bits 1–4), phase 2 = Aufmacher (Lede + Kurzmeldung).
+CREATE TABLE IF NOT EXISTS brief_cache (
+  input_hash   CHAR(64)   NOT NULL,   -- SHA-256 des normalisierten Eingabetexts (+ Metadaten)
+  phase        TINYINT    NOT NULL,   -- 1 | 2
+  payload      MEDIUMTEXT NOT NULL,   -- JSON: eine Phase
+  erstellt_am  TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (input_hash, phase)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

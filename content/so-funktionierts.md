@@ -5,11 +5,11 @@
 
 <p class="eyebrow">So funktioniert's</p>
 
-# Zwei Werkzeuge, eine Frage
+# Drei Werkzeuge, eine Frage
 
-Deckt sich die Kommunikation mit dem, was die Wissenschaft hergibt? Der **Studien-Check** erkennt Spin, der **SciSpin-O-Mat** führt ihn vor. Hier steht, wie du beide bedienst und wie du die Ausgabe liest.
+Deckt sich die Kommunikation mit dem, was die Wissenschaft hergibt? Der **Studien-Check** erkennt Spin, der **SciSpin-O-Mat** führt ihn vor, die **Kurzmeldung** schreibt eine sachliche Meldung. Hier steht, wie du sie bedienst und wie du die Ausgabe liest.
 
-<div class="toc"><a href="#check">↓ Studien-Check</a> <a href="#spin">↓ SciSpin-O-Mat</a> <a href="#bruecke">↓ Die Brücke</a></div>
+<div class="toc"><a href="#check">↓ Studien-Check</a> <a href="#spin">↓ SciSpin-O-Mat</a> <a href="#brief">↓ Kurzmeldung</a> <a href="#bruecke">↓ Die Brücke</a></div>
 
 <span class="anchor" id="check"></span>
 <span class="tag check">Spin erkennen</span>
@@ -79,10 +79,39 @@ Beantwortet: *Wie verändert Framing dieselbe Aussage?* Er schreibt eine Forschu
 
 Die zentrale Asymmetrie: links darf die *Sprache* überziehen, rechts nie der *Inhalt* – es werden keine Fakten erfunden, die Entstellung entsteht durch Framing und Weglassen. Mehr zum Gedanken dahinter auf der Seite [Über den SciSpin-O-Mat](spin/ueber.php).
 
+<span class="anchor" id="brief"></span>
+<span class="tag brief">Sachlich melden</span>
+
+## Kurzmeldung
+
+Beantwortet: *Wie schreibe ich aus dieser Studie eine kurze, korrekte Meldung?* Nach dem **5 Bits Outline** – der Methode, wie sie die AAAS für ihre Kurzmeldungen nutzt.
+
+### So benutzt du sie
+
+1. Den **Abstract oder eine Forschungsmeldung** einfügen; optional Titel, Journal und DOI für den Studienverweis.
+2. „Kurzmeldung erstellen". Zuerst entsteht das **Gerüst** aus vier Fragen, danach – erst auf dieser Grundlage – der **Aufmacher** und die fertige Meldung.
+
+### Die fünf Bits
+
+1. **Die Frage** – die sehr spezifische Fragestellung, nicht das Oberthema.
+2. **Die Methoden** – nur, was die Schlussfolgerung trägt.
+3. **Der Engpass im Feld** – was die Forschung bisher aufgehalten hat.
+4. **Der Fortschritt** – wie genau diese Arbeit das Feld voranbringt.
+5. **Der Aufmacher** – die entscheidenden ersten Sätze, bewusst **zuletzt** geschrieben.
+
+Warum zuletzt? Erst Prämisse, Methoden und Kontext, dann der erste Satz: So versteht man die Studie richtig und verzerrt sie nicht schon im Aufmacher. Mehr dazu auf der Seite [Über die Kurzmeldung](brief/ueber.php).
+
+### Grenzen
+
+- Die Meldung stützt sich **nur auf das eingegebene Material**; Fehlendes wird benannt, nicht erfunden.
+- Ein Entwurf, kein fertiger Pressetext – die redaktionelle Endabnahme bleibt.
+
+> Automatisierter Entwurf, kein Ersatz für fachliche und redaktionelle Prüfung.
+
 <span class="anchor" id="bruecke"></span>
 
 ## Die Brücke
 
-Beide Tools greifen ineinander: Nach einem Studien-Check führt der Button **„→ Wie überdreht man das?"** den Ergebnis-Text direkt in den SciSpin-O-Mat. So siehst du an *einem* Beispiel beides – was die Studie wirklich sagt und wie leicht daraus Spin wird.
+Die Tools greifen ineinander: Nach einem Studien-Check führt der Button **„→ Wie überdreht man das?"** den Ergebnis-Text direkt in den SciSpin-O-Mat. Und aus der Kurzmeldung führt **„In den SciSpin-O-Mat →"** die fertige Meldung dorthin – zur Probe, ob der eigene Aufmacher schon übertreibt. So siehst du an *einem* Beispiel alles – was die Studie sagt, wie man sachlich darüber meldet und wie leicht daraus Spin wird.
 
-> Kurz gesagt: Der Studien-Check misst, **wie weit eine Aussage trägt**. Der SciSpin-O-Mat zeigt, **wie Framing sie trägt oder kippt**.
+> Kurz gesagt: Der Studien-Check misst, **wie weit eine Aussage trägt**. Die Kurzmeldung **schreibt sie sachlich auf**. Der SciSpin-O-Mat zeigt, **wie Framing sie trägt oder kippt**.

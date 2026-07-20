@@ -38,8 +38,9 @@ return [
     'ip_salt_base'       => getenv('IP_SALT_BASE') ?: 'BITTE-DURCH-LANGEN-ZUFALLSWERT-ERSETZEN',
 
     // ==================== Gemeinsame Kostenbremse ====================
-    // Zählt JEDEN Anthropic-Call über beide Modi. Achtung: eine vollständige
-    // Spin-Analyse sind 7 Calls (eine pro Stufe), ein Studien-Check ist 1 Call.
+    // Zählt JEDEN Anthropic-Call über alle Modi. Achtung: eine vollständige
+    // Spin-Analyse sind 7 Calls (eine pro Stufe), ein Studien-Check ist 1 Call,
+    // eine Kurzmeldung sind 2 Calls (Gerüst + Aufmacher).
     'daily_llm_cap'      => 500,    // globale Obergrenze aller LLM-Calls pro Tag
 
     // ==================== Modus "check" (Studien-Check) ====================
@@ -56,11 +57,16 @@ return [
     'archive_password'     => getenv('ARCHIVE_PASSWORD') ?: '',
 
     // ==================== Modus "spin" (SciSpin-O-Mat) ====================
-    'max_input_chars'    => 4000,   // längere Eingaben werden abgelehnt
+    'max_input_chars'    => 4000,   // längere Eingaben werden abgelehnt (gilt auch für "brief")
     'rate_per_hour'      => 84,     // Spin-Calls pro Besucher/Stunde (7 = 1 Analyse)
     'spin_max_tokens'    => 6000,   // max_tokens pro Stufen-Call
     // true = statische Beispieldaten, keine API-/DB-Calls (zum Anschauen).
+    // Gilt für spin/ UND brief/ (beide liefern dann statische Demos).
     'demo_mode'          => false,
+
+    // ==================== Modus "brief" (Kurzmeldung, 5 Bits Outline) ====================
+    'brief_rate_per_hour' => 40,    // Kurzmeldungs-Calls pro Besucher/Stunde (2 = 1 Meldung)
+    'brief_max_tokens'    => 2500,  // max_tokens pro Phasen-Call
 
     // ==================== Self-Updater (tools/update.php) ====================
     // Spielt neue Releases aus dem GitHub-Repo direkt auf den Server ein.

@@ -1,8 +1,8 @@
 # SciSpin
 
-Zwei Werkzeuge für Wissenschaftskommunikation mit gemeinsamem Kern. Sie stellen
-dieselbe Frage aus zwei Richtungen: **Deckt sich die Kommunikation mit dem, was
-die Wissenschaft hergibt?**
+Drei Werkzeuge für Wissenschaftskommunikation mit gemeinsamem Kern. Sie stellen
+dieselbe Frage aus verschiedenen Richtungen: **Deckt sich die Kommunikation mit
+dem, was die Wissenschaft hergibt?**
 
 - **Studien-Check** (`check/`) – *Spin erkennen.* Link zu einer Studie einfügen;
   die App liest Metadaten und Abstract aus (Crossref, Europe PMC, arXiv, Meta-Tags)
@@ -12,9 +12,13 @@ die Wissenschaft hergibt?**
   und den Regler von −3 („liest eh keiner") bis +3 („völlig überdreht") ziehen.
   Jede Stufe schreibt den Text um, markiert die Änderungen und erklärt per Tooltip,
   welcher Kommunikationsfehler passiert. Stufe +1 ist das Ziel.
+- **Kurzmeldung** (`brief/`) – *Sachlich melden.* Aus einem Abstract eine kurze
+  Meldung im Stil einer AAAS-Kurzmeldung, entlang der fünf Fragen des „5 Bits
+  Outline". Erst entsteht das Gerüst (Frage · Methoden · Engpass · Fortschritt),
+  dann – bewusst zuletzt – der Aufmacher. Zwei API-Calls pro Meldung.
 
 Plain PHP / MySQL, für klassisches Shared Hosting. Analyse-Aufrufe gehen an die
-Anthropic-API; beide Modi teilen sich einen API-Key, eine Datenbank und eine
+Anthropic-API; alle Modi teilen sich einen API-Key, eine Datenbank und eine
 gemeinsame Kostenbremse.
 
 ## Projektstruktur
@@ -50,6 +54,14 @@ spin/                    Modus "SciSpin-O-Mat"
   api/prompt.php           Prompt bauen + Modellantwort validieren
   api/system_prompt.de.txt Systemprompt (ohne Code änderbar)
   api/demo_data.php        Statische 7-Stufen-Demo (demo_mode)
+brief/                   Modus "Kurzmeldung" (5 Bits Outline)
+  index.html  preview.html  app.js  style.css
+  ueber.php                Hülle -> content/brief.md
+  demo_payload.js          Demo-Daten für preview.html (ohne Server)
+  api/generate.php         Endpunkt für EINE Phase (Cache -> LLM -> Cache)
+  api/prompt.php           Payload je Phase bauen + Antwort validieren
+  api/system_prompt.de.txt Systemprompt mit der 5-Bits-Methode (ohne Code änderbar)
+  api/demo_data.php        Statische 2-Phasen-Demo (demo_mode)
 tools/update.php         Self-Updater (siehe unten)
 tools/edit.php           Inhalts-Editor: content/*.md live bearbeiten, ohne GitHub
 ```
@@ -147,11 +159,13 @@ ausgehenden Verkehr – dann beim Support klären, bevor du Zeit in Debugging st
 Öffentlicher Endpunkt + bezahlte LLM-API = Kostenfalle. In `lib/config.php`:
 
 - `daily_llm_cap` – globale Obergrenze **aller** LLM-Calls pro Tag (Notbremse über
-  beide Modi). **Achtung:** ein Studien-Check ist 1 Call, eine vollständige
-  Spin-Analyse sind **7** Calls (eine pro Stufe).
+  alle Modi). **Achtung:** ein Studien-Check ist 1 Call, eine Kurzmeldung sind
+  **2** Calls (Gerüst + Aufmacher), eine vollständige Spin-Analyse sind **7** Calls
+  (eine pro Stufe).
 - `rate_per_ip_per_hour` / `rate_hits_per_hour` – Studien-Checks bzw. Cache-Treffer
   pro Besucher/Stunde.
 - `rate_per_hour` – Spin-Calls pro Besucher/Stunde (7 ≈ 1 Analyse).
+- `brief_rate_per_hour` – Kurzmeldungs-Calls pro Besucher/Stunde (2 ≈ 1 Meldung).
 - `max_abstract_chars` / `max_input_chars` – kappen die Eingabelänge.
 
 Das MySQL-Rate-Limit ist stundenbasiert und gröber als ein Token-Bucket – für den
@@ -168,6 +182,12 @@ nicht Wahrheit oder Journal-Qualität.
 **SciSpin-O-Mat** – Einzelstufen-Architektur: das Frontend holt die sieben Stufen
 nacheinander, ein API-Call pro Stufe (Stufe 0 zuerst als Themen-Gate). Ein kleiner
 Call pro Stufe ist robuster auf Shared Hosting als ein großer Call für alles.
+
+**Kurzmeldung** – Zwei-Phasen-Architektur nach dem 5 Bits Outline: Phase 1 baut das
+Gerüst (Bits 1–4 + Themen-Gate wie Stufe 0 im Spin), Phase 2 schreibt daraus – erst
+danach – den Aufmacher (Bit 5) und die zusammengesetzte Kurzmeldung. Die Regel
+„Lede zuletzt" ist so nicht nur im Prompt formuliert, sondern in zwei getrennten
+Calls angelegt. Ein Call pro Phase, gecacht je (Eingabe-Hash, Phase).
 
 ## Updates einspielen (Self-Updater)
 

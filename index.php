@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SciSpin – Wissenschaftskommunikation prüfen und vorführen</title>
-<meta name="description" content="Zwei Werkzeuge für Wissenschaftskommunikation: Studien-Check erkennt Spin, der SciSpin-O-Mat führt ihn vor.">
+<title>SciSpin – Wissenschaftskommunikation prüfen, vorführen, melden</title>
+<meta name="description" content="Drei Werkzeuge für Wissenschaftskommunikation: Studien-Check erkennt Spin, der SciSpin-O-Mat führt ihn vor, die Kurzmeldung schreibt eine sachliche Meldung.">
 <link rel="stylesheet" href="assets/scispin.css">
 <style>
   :root{
@@ -24,8 +24,8 @@
            -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic;}
   .lede{font-size:19px; color:var(--muted); max-width:64ch; margin:0 0 8px;}
 
-  .cards{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:40px 0 24px;}
-  @media (max-width:640px){ .cards{grid-template-columns:1fr;} }
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin:40px 0 24px;}
+  @media (max-width:820px){ .cards{grid-template-columns:1fr;} }
   .card{display:block; text-decoration:none; color:inherit; background:var(--card);
         border:1px solid var(--line); border-radius:14px; padding:26px 24px;
         box-shadow:0 1px 3px rgba(26,32,48,.06), 0 12px 32px rgba(26,32,48,.08);
@@ -35,6 +35,7 @@
        font-weight:700; padding:3px 9px; border-radius:20px; margin-bottom:14px;}
   .tag.check{color:var(--gruen); background:rgba(31,157,92,.12);}
   .tag.spin{color:var(--rot); background:rgba(224,73,42,.10);}
+  .tag.brief{color:var(--accent); background:rgba(59,91,219,.10);}
   .card h2{font-size:1.35rem; margin:0 0 .4rem;}
   .card p{color:var(--muted); margin:0 0 1rem; font-size:.98rem;}
   .go{font-weight:600; color:var(--accent); font-size:.95rem;}
@@ -48,8 +49,9 @@
 <header class="wrap hero-wrap">
   <p class="eyebrow">Wissenschaftskommunikation</p>
   <h1>Wie weit trägt eine Aussage – und wo <span class="turn">kippt</span> sie?</h1>
-  <p class="lede">Zwei Werkzeuge, dieselbe Frage: Deckt sich die Kommunikation mit dem,
-  was die Wissenschaft hergibt? Das eine erkennt Spin, das andere führt ihn vor.</p>
+  <p class="lede">Drei Werkzeuge, dieselbe Frage: Deckt sich die Kommunikation mit dem,
+  was die Wissenschaft hergibt? Eines erkennt Spin, eines führt ihn vor, eines
+  schreibt eine sachliche Kurzmeldung.</p>
   <p style="margin:2px 0 0"><a href="so-funktionierts.php" style="color:var(--accent);font-weight:600">So funktioniert's →</a></p>
 </header>
 
@@ -69,12 +71,20 @@
       bis „völlig überdreht" – jede Stufe markiert, was sich verändert, und warum.</p>
       <span class="go">Zum SciSpin-O-Mat →</span>
     </a>
+    <a class="card" href="brief/">
+      <span class="tag brief">Sachlich melden</span>
+      <h2>Kurzmeldung</h2>
+      <p>Aus einem Abstract eine kurze Meldung im AAAS-Stil: entlang der fünf Fragen
+      des „5 Bits Outline" – erst das Gerüst, dann der Aufmacher zuletzt.</p>
+      <span class="go">Zur Kurzmeldung →</span>
+    </a>
   </div>
 
   <div class="concept">
-    <strong>Zwei Seiten einer Münze.</strong> Der SciSpin-O-Mat erzeugt Spin – er
-    übertreibt und verkompliziert dieselbe Meldung. Der Studien-Check erkennt ihn –
-    er prüft, was eine Studie wirklich hergibt. Wer beides nebeneinander sieht,
+    <strong>Ein Kreislauf.</strong> Die Kurzmeldung schreibt aus einer Studie einen
+    sachlichen Text. Der SciSpin-O-Mat führt vor, wie leicht daraus Spin wird – er
+    übertreibt und verkompliziert dieselbe Meldung. Der Studien-Check prüft
+    umgekehrt, was eine Studie wirklich hergibt. Wer alle drei nebeneinander sieht,
     versteht schneller, wie Framing eine wissenschaftliche Aussage trägt oder verzerrt.
   </div>
 </main>

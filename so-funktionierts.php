@@ -2,7 +2,7 @@
 require __DIR__ . '/lib/page.php';
 sci_page([
     'title'        => "So funktioniert's – SciSpin",
-    'description'  => "Wie der Studien-Check und der SciSpin-O-Mat funktionieren: Bedienung, Ausgabe und was die Ampel bzw. die Skala bedeuten.",
+    'description'  => "Wie Studien-Check, SciSpin-O-Mat und Kurzmeldung funktionieren: Bedienung, Ausgabe und was Ampel, Skala und die fünf Bits bedeuten.",
     'root'         => '',
     'active'       => 'hilfe',
     'content_file' => __DIR__ . '/content/so-funktionierts.md',
@@ -15,6 +15,7 @@ sci_page([
   .tag{display:inline-block;font-family:var(--sci-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:3px 9px;border-radius:20px;margin:.4rem 0 0;}
   .tag.check{color:var(--sci-good);background:rgba(31,157,92,.12);}
   .tag.spin{color:var(--sci-hot);background:rgba(224,73,42,.10);}
+  .tag.brief{color:var(--sci-accent);background:rgba(59,91,219,.10);}
   .ampel{display:grid;grid-template-columns:auto 1fr;gap:.4rem .7rem;align-items:center;margin:.7rem 0;}
   .dot{width:.8rem;height:.8rem;border-radius:50%;display:inline-block;}
   .dot.gruen{background:var(--sci-good);}.dot.gelb{background:#f9a825;}.dot.rot{background:var(--sci-hot);}.dot.grau{background:#9e9e9e;}

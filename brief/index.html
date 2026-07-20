@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kurzmeldung – AAAS-Stil nach dem 5 Bits Outline</title>
+  <link rel="stylesheet" href="../assets/scispin.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Wissenschaftskommunikation · Prototyp</p>
+      <h1>Erst das <span class="turn">Gerüst</span>,<br>dann der Aufmacher.</h1>
+      <p class="lede">
+        Aus einem Abstract wird eine kurze, sachliche Meldung im Stil einer
+        AAAS-Kurzmeldung – entlang der fünf Fragen des „5 Bits Outline". Die
+        entscheidenden ersten Sätze entstehen bewusst zuletzt, damit sie die
+        Studie nicht schon im Aufmacher verzerren.
+      </p>
+      <a class="more-link" href="ueber.php">Was ist das 5 Bits Outline? →</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="input-zone">
+      <label class="field-label" for="eingabe">Abstract oder Forschungsmeldung</label>
+      <textarea id="eingabe" placeholder="Abstract, Studienzusammenfassung oder Forschungsmeldung hier einfügen …"></textarea>
+
+      <details class="meta-details">
+        <summary>Optionale Angaben für den Studienverweis</summary>
+        <div class="meta-grid">
+          <div>
+            <label class="field-label" for="m-titel">Titel</label>
+            <input type="text" id="m-titel" placeholder="Studientitel">
+          </div>
+          <div>
+            <label class="field-label" for="m-journal">Journal</label>
+            <input type="text" id="m-journal" placeholder="z. B. Acta Sociologica">
+          </div>
+          <div>
+            <label class="field-label" for="m-doi">DOI</label>
+            <input type="text" id="m-doi" placeholder="10.xxxx/…">
+          </div>
+        </div>
+      </details>
+
+      <div style="margin-top:16px">
+        <button class="btn" id="start">Kurzmeldung erstellen</button>
+      </div>
+    </section>
+
+    <section class="output" id="output">
+      <p class="placeholder">Text einfügen und „Kurzmeldung erstellen" klicken.</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>window.SCISPIN = { root: '../', active: 'brief' };</script>
+  <script src="../assets/chrome.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+/* Kurzmeldung (5 Bits Outline) – „Redaktionstisch".
+   Nummerierte Karten fürs Gerüst (Bits 1–4), dann eine hervorgehobene
+   Karte für den Aufmacher (Bit 5), der bewusst zuletzt entsteht.
+   Teilt sich Design-Tokens/Typo mit dem SciSpin-O-Mat (spin/style.css). */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root{
+  --bg:#f4f6fb; --bg2:#eef1f8; --panel:#ffffff; --panel2:#f7f9fd;
+  --line:#dce1ec; --ink:#1a2030; --ink-soft:#566076; --ink-dim:#8b94a8;
+  --cold:#1593a8; --good:#1f9d5c; --hot:#e0492a; --accent:#3b5bdb;
+  --radius:10px; --shadow:0 1px 3px rgba(26,32,48,.08), 0 12px 32px rgba(26,32,48,.10);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:radial-gradient(1200px 600px at 70% -10%, rgba(59,91,219,.07), transparent 60%), var(--bg);
+  color:var(--ink); font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1060px; margin:0 auto; padding:0 24px;}
+a{color:var(--accent);}
+
+/* ---------- Hero ---------- */
+header.hero{ padding:60px 0 34px; }
+.eyebrow{ font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--accent); margin:0 0 16px; font-weight:500; }
+h1{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(36px,6.5vw,64px);
+  line-height:1.0; letter-spacing:-.02em; margin:0 0 18px; }
+h1 .turn{ font-style:italic; font-weight:500;
+  background:linear-gradient(90deg,var(--cold),var(--good) 50%,var(--accent));
+  -webkit-background-clip:text; background-clip:text; color:transparent; }
+.lede{ font-size:18px; color:var(--ink-soft); max-width:64ch; margin:0 0 14px; }
+.more-link{ font-family:'JetBrains Mono',monospace; font-size:13px; text-decoration:none;
+  border-bottom:1px solid currentColor; padding-bottom:1px; }
+.more-link:hover{ color:var(--ink); }
+
+/* ---------- Eingabe ---------- */
+.input-zone{ background:linear-gradient(180deg,var(--panel),var(--bg2));
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:24px; margin:8px 0 28px; box-shadow:var(--shadow); }
+.field-label{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-dim); display:block; margin-bottom:7px; }
+textarea,input[type=text]{ font-family:inherit; font-size:15px; color:var(--ink);
+  background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:11px 12px; width:100%; }
+textarea{ min-height:150px; resize:vertical; line-height:1.55; }
+textarea::placeholder,input::placeholder{ color:var(--ink-dim); }
+textarea:focus,input:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+
+.meta-details{ margin-top:16px; }
+.meta-details summary{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-dim); cursor:pointer; }
+.meta-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:12px; }
+
+.btn{ font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; letter-spacing:.03em;
+  background:var(--accent); color:#fff; border:none; border-radius:8px; padding:12px 22px;
+  cursor:pointer; transition:transform .08s, filter .15s; }
+.btn:hover{ filter:brightness(1.08); }
+.btn:active{ transform:translateY(1px); }
+.btn:disabled{ opacity:.4; cursor:not-allowed; }
+.btn.ghost{ background:transparent; color:var(--ink-soft); border:1px solid var(--line); }
+.btn.ghost:hover:not(:disabled){ border-color:var(--accent); color:var(--ink); }
+
+.sci-seed-note{ font-size:13px; color:var(--good); margin:0 0 8px;
+  font-family:'JetBrains Mono',monospace; }
+
+/* ---------- Ausgabe: Bit-Karten ---------- */
+.output{ min-height:200px; padding-bottom:64px; }
+.geruest{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+
+.bit-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:20px 22px; box-shadow:var(--shadow); }
+.bit-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+.bit-num{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:#fff;
+  background:var(--accent); border-radius:6px; padding:3px 7px; }
+.bit-titel{ font-family:'Fraunces',serif; font-size:20px; font-weight:900; }
+.bit-flag{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-dim); border:1px dashed var(--line); border-radius:20px; padding:2px 8px; }
+.bit-body{ font-size:16px; line-height:1.7; color:var(--ink); }
+.bit-body p{ margin:0 0 8px; }
+.bit-list{ margin:0 0 8px; padding-left:20px; }
+.bit-list li{ margin:0 0 5px; }
+.bit-recap{ color:var(--ink-soft); font-size:15px; }
+
+/* Bit 5 – der Aufmacher, hervorgehoben und über die volle Breite */
+.bit5{ border-color:var(--accent); box-shadow:0 1px 3px rgba(59,91,219,.12), 0 14px 36px rgba(59,91,219,.14);
+  background:linear-gradient(180deg,var(--panel),#f5f8ff); }
+.bit5 .bit-num{ background:var(--good); }
+
+.lede-satz{ font-family:'Fraunces',serif; font-size:22px; line-height:1.35; font-weight:500;
+  color:var(--ink); margin:4px 0 18px; }
+.kurzmeldung{ background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:20px 22px; font-size:17px; line-height:1.75; }
+.km-head{ font-family:'Fraunces',serif; font-size:23px; font-weight:900; line-height:1.15; margin:0 0 12px; }
+.km-beleg{ font-size:14px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:12px; margin-top:14px; }
+.km-actions{ margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
+
+.bit-card.reject{ border-color:var(--hot); }
+
+.placeholder{ color:var(--ink-dim); font-size:15px; padding:32px 0; text-align:center; }
+.placeholder.err{ color:var(--hot); }
+.spinner{ display:inline-block; width:14px; height:14px; border:2px solid var(--line);
+  border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px; margin-right:8px; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+footer{ border-top:1px solid var(--line); padding:26px 0 52px; font-family:'JetBrains Mono',monospace;
+  font-size:11px; color:var(--ink-dim); letter-spacing:.03em; }
+
+@media (max-width:640px){
+  .geruest{ grid-template-columns:1fr; }
+  .meta-grid{ grid-template-columns:1fr; }
+  .bit-titel{ font-size:18px; }
+}
+@media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kurzmeldung – Vorschau (ohne Server)</title>
+  <link rel="stylesheet" href="../assets/scispin.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Wissenschaftskommunikation · Statische Vorschau</p>
+      <h1>Erst das <span class="turn">Gerüst</span>,<br>dann der Aufmacher.</h1>
+      <p class="lede">Aus einem Abstract wird eine kurze, sachliche Meldung im Stil einer AAAS-Kurzmeldung – entlang der fünf Fragen des „5 Bits Outline". Die entscheidenden ersten Sätze entstehen bewusst zuletzt.</p>
+      <a class="more-link" href="ueber.php">Was ist das 5 Bits Outline? →</a>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:14px">Vorschaumodus: läuft ohne PHP, zeigt fest hinterlegte Demo-Daten zur MLU-Meldung 093/2025.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="output" id="output"></section>
+  </main>
+
+  <script src="demo_payload.js"></script>
+  <script>
+  const output = document.querySelector("#output");
+  const BITS = [
+    { key:"frage", num:"01", titel:"Die Frage" },
+    { key:"methoden", num:"02", titel:"Die Methoden" },
+    { key:"engpass", num:"03", titel:"Der Engpass im Feld" },
+    { key:"fortschritt", num:"04", titel:"Der Fortschritt" },
+  ];
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function render(){
+    const b = window.SCISPIN_BRIEF_DEMO.phase1, p = window.SCISPIN_BRIEF_DEMO.phase2;
+    const cards = BITS.map(x=>{
+      let body;
+      if(x.key==="methoden"){
+        body = `<ul class="bit-list">${(b.methoden||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul><p class="bit-recap">${esc(b.methoden_recap||"")}</p>`;
+      } else { body = `<p>${esc(b[x.key]||"—")}</p>`; }
+      return `<article class="bit-card"><header class="bit-head"><span class="bit-num">${x.num}</span><span class="bit-titel">${esc(x.titel)}</span></header><div class="bit-body">${body}</div></article>`;
+    }).join("");
+    const absaetze = String(p.kurzmeldung||"").split(/\n{2,}/).map(s=>s.trim()).filter(Boolean).map(s=>`<p>${esc(s)}</p>`).join("");
+    output.innerHTML = `
+      <div class="geruest">${cards}</div>
+      <article class="bit-card bit5"><header class="bit-head"><span class="bit-num">05</span><span class="bit-titel">Der Aufmacher</span><span class="bit-flag">zuletzt geschrieben</span></header>
+        <div class="bit-body">
+          <p class="lede-satz">${esc(p.lede)}</p>
+          <div class="kurzmeldung"><h3 class="km-head">${esc(p.headline)}</h3>${absaetze}</div>
+        </div>
+      </article>`;
+  }
+  render();
+  </script>
+  <script>window.SCISPIN = { root: '../', active: 'brief' };</script>
+  <script src="../assets/chrome.js"></script>
+</body>
+</html>
